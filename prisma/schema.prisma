@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id  String  @id @default(cuid())
+  email String @unique
+  password String
+  boards Board[]
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id  String  @id @default(cuid())
+  userId  String
+
+}
+
+model Board {
+  id String @id @default(cuid())
+  name  String
+  userId  String
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  columns Column[]
+  createdAt DateTime @default(now())
+}
+
+model Column {
+  id String @id @default(cuid())
+  name String
+  position Float
+  boardId String
+  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards Card[]
+}
+
+model Card {
+  id String @id @default(cuid())
+  name String
+  description String?
+  position  Float
+  columnId  String
+  column Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
