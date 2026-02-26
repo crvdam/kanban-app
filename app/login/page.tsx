@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function Login() {
@@ -10,20 +11,18 @@ export default function Login() {
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
-    const response = await fetch("/api/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      setError(data.error);
+    if (result.error) {
+      setError("Invalid email or password");
       return;
     }
 
-    window.location.href = "/";
+    window.location.href = "/dashboard";
   }
 
   return (
@@ -45,7 +44,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {error && <p>{error}</p>}
-        <button type="submit">Register</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
