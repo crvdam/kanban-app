@@ -2,6 +2,7 @@
 
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import type { Board, Column } from "../../types/index";
+import styles from "./BoardClient.module.css";
 
 export default function BoardClient({ boardId }: { boardId: string }) {
   const queryClient = useQueryClient();
@@ -48,10 +49,12 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         </button>
       </form>
 
-      <div>
+      <div className={styles.columnContainer}>
         {board?.columns?.map((column: Column) => (
-          <div key={column.id}>
-            <h3>{column.id}</h3>
+          <div className={styles.column} key={column.id}>
+            <h3>{column.name}</h3>
+            <button>Add task</button>
+            <button>Remove column</button>
           </div>
         ))}
       </div>

@@ -1,0 +1,13 @@
+.columnContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: darkslateblue;
+  width: 300px;
+  height: 400px;
+}
