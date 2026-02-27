@@ -39,8 +39,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ boa
 
   const { boardId } = await params;
   const { name } = await request.json();
-    console.log("boardId:", boardId)
-  console.log("session.user.id:", session.user.id)
+
   const board = await prisma.board.findUnique({
     where: { id: boardId, userId: session.user.id }
   })
