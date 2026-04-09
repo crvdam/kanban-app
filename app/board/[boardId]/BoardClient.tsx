@@ -3,7 +3,7 @@
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import type { Board, Column, Card } from "@/app/types";
 import styles from "./BoardClient.module.css";
-import CardItem from "@/app/components/CardItem";
+import ColumnItem from "@/app/components/ColumnItem/ColumnItem";
 
 export default function BoardClient({ boardId }: { boardId: string }) {
     const queryClient = useQueryClient();
@@ -36,7 +36,6 @@ export default function BoardClient({ boardId }: { boardId: string }) {
 
     const handleCreateColumn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         createColumn.mutate();
     };
 
@@ -46,6 +45,28 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                 method: "DELETE",
             });
             if (!result.ok) throw new Error("Failed to delete column");
+            return result.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["board"] });
+        },
+    });
+
+    const renameColumn = useMutation({
+        mutationFn: async ({
+            columnId,
+            name,
+        }: {
+            columnId: string;
+            name: string;
+        }) => {
+            const result = await fetch(`/api/columns/${columnId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name }),
+            });
+
+            if (!result.ok) throw new Error("Failed to rename column");
             return result.json();
         },
         onSuccess: () => {
@@ -97,7 +118,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                 body: JSON.stringify({ name: name }),
             });
 
-            if (!result.ok) throw new Error("Failed to delete card");
+            if (!result.ok) throw new Error("Failed to rename card");
             return result.json();
         },
         onSuccess: () => {
@@ -119,29 +140,21 @@ export default function BoardClient({ boardId }: { boardId: string }) {
 
             <div className={styles.columnContainer}>
                 {board?.columns?.map((column: Column) => (
-                    <div className={styles.column} key={column.id}>
-                        <h3>{column.name}</h3>
-                        <button onClick={() => createCard.mutate(column.id)}>
-                            Add task
-                        </button>
-                        <button onClick={() => deleteColumn.mutate(column.id)}>
-                            Remove column
-                        </button>
-
-                        {column.cards?.map((card: Card) => (
-                            <CardItem
-                                key={card.id}
-                                card={card}
-                                onDelete={(id) => deleteCard.mutate(id)}
-                                onRename={(id, name) =>
-                                    renameCard.mutate({
-                                        cardId: card.id,
-                                        name,
-                                    })
-                                }
-                            />
-                        ))}
-                    </div>
+                    <ColumnItem
+                        key={column.id}
+                        column={column}
+                        onDeleteColumn={(columnId) =>
+                            deleteColumn.mutate(columnId)
+                        }
+                        onRenameColumn={(columnId, name) =>
+                            renameColumn.mutate(columnId, name)
+                        }
+                        onCreateCard={(columnId) => createCard.mutate(columnId)}
+                        onDeleteCard={(cardId) => deleteCard.mutate(cardId)}
+                        onRenameCard={(cardId, name) =>
+                            renameCard.mutate({ cardId, name })
+                        }
+                    />
                 ))}
             </div>
         </div>
