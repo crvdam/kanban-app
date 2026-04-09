@@ -147,7 +147,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                             deleteColumn.mutate(columnId)
                         }
                         onRenameColumn={(columnId, name) =>
-                            renameColumn.mutate(columnId, name)
+                            renameColumn.mutate({ columnId, name })
                         }
                         onCreateCard={(columnId) => createCard.mutate(columnId)}
                         onDeleteCard={(cardId) => deleteCard.mutate(cardId)}
