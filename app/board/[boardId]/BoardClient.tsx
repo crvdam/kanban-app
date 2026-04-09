@@ -41,11 +41,11 @@ export default function BoardClient({ boardId }: { boardId: string }) {
 
   const deleteColumn = useMutation({
     mutationFn: async (columnId: string) => {
-      const results = await fetch(`/api/columns/${columnId}`, {
+      const result = await fetch(`/api/columns/${columnId}`, {
         method: "DELETE",
       });
-      if (!results.ok) throw new Error("Faled to delete column");
-      return results.json();
+      if (!result.ok) throw new Error("Failed to delete column");
+      return result.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["board"] });
@@ -61,11 +61,26 @@ export default function BoardClient({ boardId }: { boardId: string }) {
       });
 
       if (!result.ok) throw new Error("Failed to create card");
+      return result.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["board"] });
     },
   });
+
+  const deleteCard = useMutation({
+    mutationFn: async (cardId: string) => {
+      const result = await fetch(`/api/cards/${cardId}`, {
+        method: "DELETE"
+      })
+
+      if (!result.ok) throw new Error("Failed to delete card");
+      return result.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["board"]});
+    }
+  })
 
   return (
     <div>
@@ -91,6 +106,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
             {column.cards?.map((card: Card) => (
               <div key={card.id}>
                 <p>Card</p>
+                <button onClick={() => deleteCard.mutate(card.id)}>Delete card</button>
               </div>
             ))}
           </div>

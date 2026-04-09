@@ -29,7 +29,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ c
     return NextResponse.json({ error: "Unauthorized"}, { status: 403 })
   }
 
-  await prisma.column.delete({
+  await prisma.card.delete({
     where: { id: cardId }
   })
 
