@@ -63,23 +63,33 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ ca
     return NextResponse.json({ error: "Unauthorized"}, { status: 403 })
   }
 
- const { columnId, positionAbove, positionBelow } = await request.json();
+  const { columnId, positionAbove, positionBelow, name } = await request.json();
+ 
+  const data: Partial<{ name: string, columnId: string, position: number}> = {};
+  
+  let position: number | undefined;
+  if (columnId !== undefined) {
+    if (positionAbove === null && positionBelow === null) {
+      position = 1;
+    } else if (positionAbove === null) {
+      position = positionBelow / 2;
+    } else if (positionBelow === null) {
+      position = positionAbove + 1;
+    } else {
+      position = (positionAbove + positionBelow) / 2;
+    }
+    data.columnId = columnId;
+    data.position = position;
+  }
+  
+  if (name !== undefined) data.name = name;
+  if (columnId !== undefined) data.columnId = columnId;
+  if (position !== undefined) data.position = position;
 
- let position: number;
- if (positionAbove === null && positionBelow === null) {
-  position = 1;
- } else if (positionAbove === null) { 
-  position = positionBelow / 2;
- } else if (positionBelow === null) {
-  position = positionAbove + 1;
- } else {
-  position = (positionAbove + positionBelow) / 2;
- }
+  const updatedCard = await prisma.card.update({
+    where: { id: cardId },
+    data: data
+  })
 
- const updatedCard = await prisma.card.update({
-  where: { id: cardId },
-  data: { columnId, position }
- })
-
- return NextResponse.json(updatedCard, { status: 200 })
+  return NextResponse.json(updatedCard, { status: 200 })
 }

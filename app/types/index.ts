@@ -1,6 +1,6 @@
 export type Card = {
   id: string
-  title: string
+  name: string
   description: string | null
   position: number
   columnId: string
