@@ -44,10 +44,12 @@ export default function ColumnItem({
             <button onClick={() => onDeleteColumn(column.id)}>
                 Remove column
             </button>
-            {column.cards?.map((card: Card) => (
+            {column.cards?.map((card: Card, index: number) => (
                 <CardItem
                     key={card.id}
                     card={card}
+                    column={column.id}
+                    index={index}
                     onDelete={(id) => onDeleteCard(id)}
                     onRename={(id, name) => onRenameCard(id, name)}
                 />
