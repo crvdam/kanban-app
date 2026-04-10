@@ -39,7 +39,10 @@ export default function CardItem({
                         );
                     }}
                     onBlur={() => {
-                        onRename(card.id, name);
+                        if (name !== card.name) {
+                            onRename(card.id, name);
+                        }
+
                         setIsEditing(false);
                     }}
                     onKeyDown={(event) =>
