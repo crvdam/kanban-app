@@ -27,7 +27,7 @@ export default function CardItem({
     });
 
     return (
-        <div className="item" ref={ref} data-dragging={isDragging}>
+        <div ref={ref} data-dragging={isDragging}>
             {isEditing ? (
                 <input
                     value={name}

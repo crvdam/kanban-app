@@ -3,6 +3,8 @@ import { Column, Card } from "@/app/types";
 import styles from "./ColumnItem.module.css";
 import { useState } from "react";
 import CardItem from "@/app/components/CardItem/CardItem";
+import { useDroppable } from "@dnd-kit/react";
+import { CollisionPriority } from "@dnd-kit/abstract";
 
 export default function ColumnItem({
     column,
@@ -21,9 +23,16 @@ export default function ColumnItem({
 }) {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(column.name);
+    const { isDropTarget, ref } = useDroppable({
+        id: column.id,
+        type: "column",
+        accept: "item",
+        collisionPriority: CollisionPriority.Low,
+    });
+    const style = isDropTarget ? { background: "#00000030" } : undefined;
 
     return (
-        <div className={styles.column}>
+        <div className={styles.column} ref={ref} style={style}>
             {isEditing ? (
                 <input
                     value={name}
