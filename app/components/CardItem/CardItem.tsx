@@ -47,7 +47,12 @@ export default function CardItem({
                     autoFocus
                 />
             ) : (
-                <p onClick={() => setIsEditing(true)}>{card.name}</p>
+                <p
+                    className={styles.cardTitle}
+                    onClick={() => setIsEditing(true)}
+                >
+                    {card.name}
+                </p>
             )}
 
             <button onClick={() => onDelete(card.id)}>Delete card</button>

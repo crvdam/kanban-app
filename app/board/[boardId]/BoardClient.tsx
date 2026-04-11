@@ -7,6 +7,8 @@ import ColumnItem from "@/app/components/ColumnItem/ColumnItem";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function BoardClient({ boardId }: { boardId: string }) {
     const queryClient = useQueryClient();
@@ -147,16 +149,6 @@ export default function BoardClient({ boardId }: { boardId: string }) {
 
     return (
         <div>
-            <h1>Dashboard</h1>
-
-            <form onSubmit={handleCreateColumn}>
-                <button type="submit" disabled={createColumn.isPending}>
-                    {createColumn.isPending
-                        ? "Creating..."
-                        : "Create new column"}
-                </button>
-            </form>
-
             <DragDropProvider
                 onDragStart={() => {
                     previousItems.current = items;
@@ -206,6 +198,25 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                             />
                         );
                     })}
+                    <form
+                        className={styles.addColumnForm}
+                        onSubmit={handleCreateColumn}
+                    >
+                        <button
+                            className={styles.addColumnButton}
+                            type="submit"
+                            disabled={createColumn.isPending}
+                        >
+                            {createColumn.isPending ? (
+                                <FontAwesomeIcon
+                                    className={styles.spinning}
+                                    icon={faSpinner}
+                                />
+                            ) : (
+                                <FontAwesomeIcon icon={faPlus} />
+                            )}
+                        </button>
+                    </form>
                 </div>
             </DragDropProvider>
         </div>

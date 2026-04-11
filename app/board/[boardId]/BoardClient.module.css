@@ -1,4 +1,36 @@
 .columnContainer {
   display: flex;
   gap: 1rem;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.addColumnForm {
+  align-self: center;
+}
+
+.addColumnButton {
+  background-color: var(--bg-secondary);
+  border: none;
+  color: var(--clr-primary);
+  font-size: 18px;
+  padding: 0.5rem 0.5rem;
+  border-radius: 5px;
+}
+
+.addColumnButton:hover {
+  background-color: var(--bg-secondary-hover);
+}
+
+.spinning {
+   animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }

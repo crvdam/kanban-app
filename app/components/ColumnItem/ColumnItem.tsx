@@ -32,37 +32,48 @@ export default function ColumnItem({
     const style = isDropTarget ? { background: "#00000030" } : undefined;
 
     return (
-        <div className={styles.column} ref={ref} style={style}>
-            {isEditing ? (
-                <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onBlur={() => {
-                        onRenameColumn(column.id, name);
-                        setIsEditing(false);
-                    }}
-                    onKeyDown={(e) =>
-                        e.key === "Enter" && e.currentTarget.blur()
-                    }
-                    autoFocus
-                />
-            ) : (
-                <h3 onClick={() => setIsEditing(true)}>{column.name}</h3>
-            )}
-            <button onClick={() => onCreateCard(column.id)}>Add task</button>
-            <button onClick={() => onDeleteColumn(column.id)}>
-                Remove column
-            </button>
-            {column.cards?.map((card: Card, index: number) => (
-                <CardItem
-                    key={card.id}
-                    card={card}
-                    column={column.id}
-                    index={index}
-                    onDelete={(id) => onDeleteCard(id)}
-                    onRename={(id, name) => onRenameCard(id, name)}
-                />
-            ))}
+        <div className={styles.column}>
+            <div className={styles.columnHeader}>
+                {isEditing ? (
+                    <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onBlur={() => {
+                            onRenameColumn(column.id, name);
+                            setIsEditing(false);
+                        }}
+                        onKeyDown={(e) =>
+                            e.key === "Enter" && e.currentTarget.blur()
+                        }
+                        autoFocus
+                    />
+                ) : (
+                    <h3
+                        className={styles.columnTitle}
+                        onClick={() => setIsEditing(true)}
+                    >
+                        {column.name}
+                    </h3>
+                )}
+            </div>
+            <div className={styles.columnBody} ref={ref} style={style}>
+                {column.cards?.map((card: Card, index: number) => (
+                    <CardItem
+                        key={card.id}
+                        card={card}
+                        column={column.id}
+                        index={index}
+                        onDelete={(id) => onDeleteCard(id)}
+                        onRename={(id, name) => onRenameCard(id, name)}
+                    />
+                ))}
+                <button onClick={() => onCreateCard(column.id)}>
+                    Add task
+                </button>
+                <button onClick={() => onDeleteColumn(column.id)}>
+                    Remove column
+                </button>
+            </div>
         </div>
     );
 }

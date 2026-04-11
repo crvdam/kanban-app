@@ -1,0 +1,18 @@
+.card {
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    padding: 0.5rem;
+    min-height: 6rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 2px 2px 1px rgba(0,0,0,0.05)
+}
+
+.card:hover {
+    background-color: var(--bg-primary-hover);
+}
+
+.cardTitle {
+    min-height: 1rem;
+    color: var(--clr-primary)
+}
