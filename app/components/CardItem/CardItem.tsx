@@ -27,16 +27,12 @@ export default function CardItem({
     });
 
     return (
-        <div ref={ref} data-dragging={isDragging}>
+        <div className={styles.card} ref={ref} data-dragging={isDragging}>
             {isEditing ? (
                 <input
                     value={name}
                     onChange={(event) => {
-                        setName(
-                            event.target.value
-                                ? event.target.value
-                                : "Enter name",
-                        );
+                        setName(event.target.value);
                     }}
                     onBlur={() => {
                         if (name !== card.name) {
