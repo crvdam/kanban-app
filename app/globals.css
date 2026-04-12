@@ -6,7 +6,8 @@
   --bg-secondary-hover: #f6feff;
   --clr-primary: #000000;
   --clr-secondary: #4d4d4d;
-  --clr-tertiary: #e9e9e9;
+  --clr-cta: #6c5ce7;
+  --clr-cta-hover: #3c2ea8;
   --border-radius-small: 5px;
   --border-radius-medium: 15px;
   --main-width: 1920px;
@@ -39,8 +40,12 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--clr-cta);
   text-decoration: none;
+}
+
+a:hover {
+  color: var(--clr-cta-hover);
 }
 
 *:hover {
@@ -49,6 +54,23 @@ a {
 
 button {
   cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 5px;
+  background: var(--clr-cta);
+  color: var(--bg-primary);
+  border: none;
+}
+
+button:hover {
+  background-color: var(--clr-cta-hover);
+}
+
+input {
+  border-radius: 5px;
+  padding: 0.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--clr-secondary);
+  color: var(--clr-primary);
 }
 
 h1 {
@@ -59,7 +81,52 @@ h3 {
   font-size: 16px;
 }
 
+main {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 4rem;
+    justify-content: center;
+    height: 100dvh;
+}
 
+.genericFormContainer {
+    background-color: var(--bg-primary);
+    padding: 2rem;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.genericForm {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 0.2rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+
+    label {
+        grid-column: 1;
+        margin-right: 0.5rem;
+        text-align: right;
+    }
+    
+    input[type=text],
+    input[type=password] {
+        grid-column: 2;
+        
+    }
+
+    button[type=submit] {
+        grid-column: 1 / 3;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    p {
+        grid-column: 1 / 3;
+        color: red;
+    }
+    
+}
 
 
 @media (hover: hover) and (pointer: fine) {

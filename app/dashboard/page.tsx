@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 import type { Board } from "../types/index";
+import Header from "../components/Header/Header";
 
 export default function Dashboard() {
     const queryClient = useQueryClient();
@@ -45,29 +46,38 @@ export default function Dashboard() {
     };
 
     return (
-        <div>
-            <h1>Dashboard</h1>
+        <>
+            <Header />
+            <main>
+                <div className="genericFormContainer">
+                    <h1>Dashboard</h1>
 
-            <form onSubmit={handleCreate}>
-                <input
-                    type="text"
-                    onChange={(event) => setNewBoardName(event.target.value)}
-                    placeholder="New board name"
-                ></input>
-                <button type="submit" disabled={createBoard.isPending}>
-                    {createBoard.isPending ? "Creating..." : "Create new board"}
-                </button>
-            </form>
+                    <form className="genericForm" onSubmit={handleCreate}>
+                        <input
+                            type="text"
+                            onChange={(event) =>
+                                setNewBoardName(event.target.value)
+                            }
+                            placeholder="New project"
+                        ></input>
+                        <button type="submit" disabled={createBoard.isPending}>
+                            {createBoard.isPending
+                                ? "Creating..."
+                                : "Create new project"}
+                        </button>
+                    </form>
 
-            <div>
-                {boards?.map((board) => (
-                    <div key={board.id}>
-                        <Link href={`/board/${board.id}`}>
-                            <h2>{board.name}</h2>
-                        </Link>
+                    <div>
+                        {boards?.map((board) => (
+                            <div key={board.id}>
+                                <Link href={`/board/${board.id}`}>
+                                    <h2>{board.name}</h2>
+                                </Link>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-        </div>
+                </div>
+            </main>
+        </>
     );
 }
