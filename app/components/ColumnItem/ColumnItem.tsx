@@ -29,7 +29,9 @@ export default function ColumnItem({
         accept: "item",
         collisionPriority: CollisionPriority.Low,
     });
-    const style = isDropTarget ? { background: "#00000030" } : undefined;
+    const style = isDropTarget
+        ? { background: "var(--bg-primary-hover)" }
+        : undefined;
 
     return (
         <div className={styles.column}>
@@ -67,12 +69,12 @@ export default function ColumnItem({
                         onRename={(id, name) => onRenameCard(id, name)}
                     />
                 ))}
-                <button onClick={() => onCreateCard(column.id)}>
+                {/* <button onClick={() => onCreateCard(column.id)}>
                     Add task
                 </button>
                 <button onClick={() => onDeleteColumn(column.id)}>
                     Remove column
-                </button>
+                </button> */}
             </div>
         </div>
     );
