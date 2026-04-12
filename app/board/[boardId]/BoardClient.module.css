@@ -1,8 +1,15 @@
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  max-width: var(--main-width);
+}
+
 .columnContainer {
   display: flex;
   gap: 1rem;
   align-items: stretch;
-  justify-content: center;
 }
 
 .addColumnForm {

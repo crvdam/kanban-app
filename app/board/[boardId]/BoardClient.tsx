@@ -4,6 +4,7 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import type { Board, Column, Card } from "@/app/types";
 import styles from "./BoardClient.module.css";
 import ColumnItem from "@/app/components/ColumnItem/ColumnItem";
+import Header from "@/app/components/Header/Header";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import { useEffect, useRef, useState } from "react";
@@ -148,77 +149,87 @@ export default function BoardClient({ boardId }: { boardId: string }) {
     });
 
     return (
-        <div>
-            <DragDropProvider
-                onDragStart={() => {
-                    previousItems.current = items;
-                }}
-                onDragOver={(event) => {
-                    setItems((items) => move(items, event));
-                }}
-                onDragEnd={(event) => {
-                    if (event.canceled) {
-                        setItems(previousItems.current);
-                        return;
-                    }
-                    // PATCH LOGICA
-                }}
-            >
-                <div className={styles.columnContainer}>
-                    {board?.columns?.map((column: Column) => {
-                        const cardIds = items[column.id] || [];
-                        const allCards = board.columns.flatMap(
-                            (column) => column.cards,
-                        );
-                        const cardsForColumn = cardIds
-                            .map((id) =>
-                                allCards.find((card) => card.id === id),
-                            )
-                            .filter((card): card is Card => card !== undefined);
+        <>
+            <Header />
+            <div className={styles.boardContainer}>
+                <h1>{board ? board.name : "My board"}</h1>
 
-                        return (
-                            <ColumnItem
-                                key={column.id}
-                                column={{ ...column, cards: cardsForColumn }}
-                                onDeleteColumn={(columnId) =>
-                                    deleteColumn.mutate(columnId)
-                                }
-                                onRenameColumn={(columnId, name) =>
-                                    renameColumn.mutate({ columnId, name })
-                                }
-                                onCreateCard={(columnId) =>
-                                    createCard.mutate(columnId)
-                                }
-                                onDeleteCard={(cardId) =>
-                                    deleteCard.mutate(cardId)
-                                }
-                                onRenameCard={(cardId, name) =>
-                                    renameCard.mutate({ cardId, name })
-                                }
-                            />
-                        );
-                    })}
-                    <form
-                        className={styles.addColumnForm}
-                        onSubmit={handleCreateColumn}
-                    >
-                        <button
-                            className={styles.addColumnButton}
-                            type="submit"
-                            disabled={createColumn.isPending}
-                        >
-                            {createColumn.isPending ? (
-                                <FontAwesomeIcon
-                                    className={styles.spinning}
-                                    icon={faSpinner}
+                <DragDropProvider
+                    onDragStart={() => {
+                        previousItems.current = items;
+                    }}
+                    onDragOver={(event) => {
+                        setItems((items) => move(items, event));
+                    }}
+                    onDragEnd={(event) => {
+                        if (event.canceled) {
+                            setItems(previousItems.current);
+                            return;
+                        }
+                        // PATCH LOGICA
+                    }}
+                >
+                    <div className={styles.columnContainer}>
+                        {board?.columns?.map((column: Column) => {
+                            const cardIds = items[column.id] || [];
+                            const allCards = board.columns.flatMap(
+                                (column) => column.cards,
+                            );
+                            const cardsForColumn = cardIds
+                                .map((id) =>
+                                    allCards.find((card) => card.id === id),
+                                )
+                                .filter(
+                                    (card): card is Card => card !== undefined,
+                                );
+
+                            return (
+                                <ColumnItem
+                                    key={column.id}
+                                    column={{
+                                        ...column,
+                                        cards: cardsForColumn,
+                                    }}
+                                    onDeleteColumn={(columnId) =>
+                                        deleteColumn.mutate(columnId)
+                                    }
+                                    onRenameColumn={(columnId, name) =>
+                                        renameColumn.mutate({ columnId, name })
+                                    }
+                                    onCreateCard={(columnId) =>
+                                        createCard.mutate(columnId)
+                                    }
+                                    onDeleteCard={(cardId) =>
+                                        deleteCard.mutate(cardId)
+                                    }
+                                    onRenameCard={(cardId, name) =>
+                                        renameCard.mutate({ cardId, name })
+                                    }
                                 />
-                            ) : (
-                                <FontAwesomeIcon icon={faPlus} />
-                            )}
-                        </button>
-                    </form>
-                </div>
-            </DragDropProvider>
-        </div>
+                            );
+                        })}
+                        <form
+                            className={styles.addColumnForm}
+                            onSubmit={handleCreateColumn}
+                        >
+                            <button
+                                className={styles.addColumnButton}
+                                type="submit"
+                                disabled={createColumn.isPending}
+                            >
+                                {createColumn.isPending ? (
+                                    <FontAwesomeIcon
+                                        className={styles.spinning}
+                                        icon={faSpinner}
+                                    />
+                                ) : (
+                                    <FontAwesomeIcon icon={faPlus} />
+                                )}
+                            </button>
+                        </form>
+                    </div>
+                </DragDropProvider>
+            </div>
+        </>
     );
 }
