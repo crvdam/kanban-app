@@ -89,6 +89,10 @@ main {
     height: 100dvh;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .genericFormContainer {
     background-color: var(--bg-primary);
     padding: 2rem;

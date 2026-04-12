@@ -1,0 +1,25 @@
+.projectList {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    text-align:left;
+}
+
+.projectName {
+    display: inline;
+}
+
+.caretRight {
+    display:inline;
+}
+
+.newProjectForm {
+    input[type=text],
+    button[type=submit] {
+        display: block;
+        width: 240px;
+    }
+
+    input[type=text] {
+        margin-bottom: 0.25rem;
+    }
+}

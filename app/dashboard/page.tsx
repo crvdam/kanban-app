@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Board } from "../types/index";
 import Header from "../components/Header/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import styles from "./page.module.css";
 
 export default function Dashboard() {
     const queryClient = useQueryClient();
@@ -50,9 +53,28 @@ export default function Dashboard() {
             <Header />
             <main>
                 <div className="genericFormContainer">
-                    <h1>Dashboard</h1>
+                    <h1>My projects</h1>
 
-                    <form className="genericForm" onSubmit={handleCreate}>
+                    <ul className={styles.projectList}>
+                        {boards?.map((board) => (
+                            <li key={board.id}>
+                                <Link href={`/board/${board.id}`}>
+                                    <h2 className={styles.projectName}>
+                                        {board.name}
+                                    </h2>
+                                    <FontAwesomeIcon
+                                        className={styles.caretRight}
+                                        icon={faCaretRight}
+                                    />
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <form
+                        className={styles.newProjectForm}
+                        onSubmit={handleCreate}
+                    >
                         <input
                             type="text"
                             onChange={(event) =>
@@ -66,16 +88,6 @@ export default function Dashboard() {
                                 : "Create new project"}
                         </button>
                     </form>
-
-                    <div>
-                        {boards?.map((board) => (
-                            <div key={board.id}>
-                                <Link href={`/board/${board.id}`}>
-                                    <h2>{board.name}</h2>
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
                 </div>
             </main>
         </>
