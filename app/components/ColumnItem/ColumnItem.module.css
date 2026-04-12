@@ -8,11 +8,33 @@
 
 .columnHeader {
   background: #b9b4fe;
-  padding: 1.25rem 0 1.5rem 1rem;
+  padding: 1rem;
   border-radius: 16px 16px 0 0 ;
+  display: flex;
+  align-items: center;
+}
+
+.faGear, .faPlus {
+  color: var(--clr-secondary);
+  font-size: 12px;
+    vertical-align: 0em;
+}
+
+.columnButton {
+  background: none;
+  padding: 0.4rem;
+}
+
+.columnButton:hover {
+
+  .faGear, .faPlus {
+    color: var(--bg-primary);
+  }
 }
 
 .columnTitle {
   color: var(--clr-primary);
   text-transform: uppercase;
+  margin-right: auto;
+  font-size: 14px;
 }

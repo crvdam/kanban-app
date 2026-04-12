@@ -5,6 +5,8 @@ import { useState } from "react";
 import CardItem from "@/app/components/CardItem/CardItem";
 import { useDroppable } from "@dnd-kit/react";
 import { CollisionPriority } from "@dnd-kit/abstract";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function ColumnItem({
     column,
@@ -50,12 +52,35 @@ export default function ColumnItem({
                         autoFocus
                     />
                 ) : (
-                    <h3
-                        className={styles.columnTitle}
-                        onClick={() => setIsEditing(true)}
-                    >
-                        {column.name}
-                    </h3>
+                    <>
+                        <h3
+                            className={styles.columnTitle}
+                            onClick={() => setIsEditing(true)}
+                        >
+                            {column.name}
+                            {column.cards.length
+                                ? " - " + column.cards.length
+                                : ""}
+                        </h3>
+                        <button
+                            className={styles.columnButton}
+                            onClick={() => onCreateCard(column.id)}
+                        >
+                            <FontAwesomeIcon
+                                className={styles.faPlus}
+                                icon={faPlus}
+                            />
+                        </button>
+                        <button
+                            className={styles.columnButton}
+                            onClick={() => onDeleteColumn(column.id)}
+                        >
+                            <FontAwesomeIcon
+                                className={styles.faGear}
+                                icon={faGear}
+                            />
+                        </button>
+                    </>
                 )}
             </div>
             <div className={styles.columnBody} ref={ref} style={style}>
@@ -69,12 +94,9 @@ export default function ColumnItem({
                         onRename={(id, name) => onRenameCard(id, name)}
                     />
                 ))}
-                {/* <button onClick={() => onCreateCard(column.id)}>
+                {/* <button >
                     Add task
-                </button>
-                <button onClick={() => onDeleteColumn(column.id)}>
-                    Remove column
-                </button> */}
+                </button>*/}
             </div>
         </div>
     );
