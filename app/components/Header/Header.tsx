@@ -1,6 +1,8 @@
 import styles from "./Header.module.css";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
     return (
@@ -14,8 +16,11 @@ export default function Header() {
                 />
             </div>
 
-            <button onClick={() => signOut({ callbackUrl: "/login" })}>
-                Sign out
+            <button
+                className={styles.profileButton}
+                onClick={() => signOut({ callbackUrl: "/login" })}
+            >
+                <FontAwesomeIcon icon={faCircleUser} />
             </button>
         </header>
     );

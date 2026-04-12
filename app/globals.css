@@ -63,6 +63,7 @@ button {
 }
 
 button:hover {
+  transition: .3s;
   background-color: var(--clr-cta-hover);
 }
 
