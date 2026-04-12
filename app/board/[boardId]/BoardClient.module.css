@@ -1,7 +1,7 @@
 .main {
   padding-top: 2rem;
-  height: 100%;
   align-items: stretch;
+  justify-content: left;
 }
 
 .aside {
@@ -15,6 +15,10 @@
 
 .projectName {
   font-size: 20px;
+}
+
+.faCaretLeft {
+  vertical-align: -0.2em;
 }
 
 .columnContainer {

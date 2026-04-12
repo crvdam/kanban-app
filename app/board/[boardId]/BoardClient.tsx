@@ -9,7 +9,12 @@ import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+    faPlus,
+    faSpinner,
+    faCaretLeft,
+} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 export default function BoardClient({ boardId }: { boardId: string }) {
     const queryClient = useQueryClient();
@@ -156,6 +161,15 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                     <h1 className={styles.projectName}>
                         projects / {board ? board.name : "My board"}
                     </h1>
+                    <Link href="/dashboard">
+                        <p>
+                            <FontAwesomeIcon
+                                className={styles.faCaretLeft}
+                                icon={faCaretLeft}
+                            />
+                            Back to overview
+                        </p>
+                    </Link>
                 </aside>
 
                 <DragDropProvider
