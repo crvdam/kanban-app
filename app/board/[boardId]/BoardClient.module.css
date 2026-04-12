@@ -1,15 +1,27 @@
-.boardContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  max-width: var(--main-width);
+.main {
+  padding-top: 2rem;
+  height: 100%;
+  align-items: stretch;
+}
+
+.aside {
+  width: 320px;
+  margin-right: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  border-right: 1px solid var(--clr-tertiary);
+  border-top-right-radius: 16px;
+}
+
+.projectName {
+  font-size: 20px;
 }
 
 .columnContainer {
   display: flex;
   gap: 1rem;
   align-items: stretch;
+  flex-wrap: wrap;
 }
 
 .addColumnForm {
@@ -19,14 +31,15 @@
 .addColumnButton {
   background-color: var(--bg-secondary);
   border: none;
-  color: var(--clr-primary);
+  color: var(--clr-cta);
   font-size: 18px;
   padding: 0.5rem 0.5rem;
   border-radius: 5px;
 }
 
 .addColumnButton:hover {
-  background-color: var(--bg-secondary-hover);
+  background-color: var(--clr-cta-hover);
+  color: var(--bg-primary);
 }
 
 .spinning {

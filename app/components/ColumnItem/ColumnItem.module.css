@@ -4,11 +4,10 @@
   padding: 0.2rem;
   background-color: var(--bg-secondary);
   border-radius: 0 0 5px 5px;
-  border: 1px solid var(--clr-tertiary);
 }
 
 .columnHeader {
-  background: rgb(226, 224, 253);
+  background: #b9b4fe;
   padding: 1.25rem 0 1.5rem 1rem;
   border-radius: 16px 16px 0 0 ;
 }

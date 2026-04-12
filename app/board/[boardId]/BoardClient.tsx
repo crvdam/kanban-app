@@ -151,8 +151,12 @@ export default function BoardClient({ boardId }: { boardId: string }) {
     return (
         <>
             <Header />
-            <div className={styles.boardContainer}>
-                <h1>{board ? board.name : "My board"}</h1>
+            <main className={styles.main}>
+                <aside className={styles.aside}>
+                    <h1 className={styles.projectName}>
+                        projects / {board ? board.name : "My board"}
+                    </h1>
+                </aside>
 
                 <DragDropProvider
                     onDragStart={() => {
@@ -194,7 +198,10 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                                         deleteColumn.mutate(columnId)
                                     }
                                     onRenameColumn={(columnId, name) =>
-                                        renameColumn.mutate({ columnId, name })
+                                        renameColumn.mutate({
+                                            columnId,
+                                            name,
+                                        })
                                     }
                                     onCreateCard={(columnId) =>
                                         createCard.mutate(columnId)
@@ -229,7 +236,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                         </form>
                     </div>
                 </DragDropProvider>
-            </div>
+            </main>
         </>
     );
 }
