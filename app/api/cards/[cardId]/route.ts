@@ -77,17 +77,29 @@ export async function PATCH(
 
     let position: number | undefined;
     if (columnId !== undefined) {
-        if (positionAbove === null && positionBelow === null) {
-            position = 1;
-        } else if (positionAbove === null) {
-            position = positionBelow / 2;
-        } else if (positionBelow === null) {
-            position = positionAbove + 1;
-        } else {
-            position = (positionAbove + positionBelow) / 2;
+        const above = positionAbove === null ? null : Number(positionAbove);
+        const below = positionBelow === null ? null : Number(positionBelow);
+
+        if (
+            (above !== null && !Number.isFinite(above)) ||
+            (below !== null && !Number.isFinite(below))
+        ) {
+            return NextResponse.json(
+                { error: "Invalid position" },
+                { status: 400 },
+            );
         }
-        data.columnId = columnId;
-        data.position = position;
+
+        let position: number;
+        if (above === null && below === null) {
+            position = 1;
+        } else if (above === null) {
+            position = below! / 2;
+        } else if (below === null) {
+            position = above + 1;
+        } else {
+            position = (above + below) / 2;
+        }
     }
 
     if (name !== undefined) data.name = name;
