@@ -28,10 +28,6 @@
   flex-wrap: wrap;
 }
 
-.addColumnForm {
-  align-self: center;
-}
-
 .addColumnButton {
   background-color: var(--bg-secondary);
   border: none;
