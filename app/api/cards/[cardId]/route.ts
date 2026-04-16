@@ -75,7 +75,6 @@ export async function PATCH(
     const data: Partial<{ name: string; columnId: string; position: number }> =
         {};
 
-    let position: number | undefined;
     if (columnId !== undefined) {
         const above = positionAbove === null ? null : Number(positionAbove);
         const below = positionBelow === null ? null : Number(positionBelow);
@@ -90,21 +89,20 @@ export async function PATCH(
             );
         }
 
-        let position: number;
         if (above === null && below === null) {
-            position = 1;
+            data.position = 1;
         } else if (above === null) {
-            position = below! / 2;
+            data.position = below! / 2;
         } else if (below === null) {
-            position = above + 1;
+            data.position = above + 1;
         } else {
-            position = (above + below) / 2;
+            data.position = (above + below) / 2;
         }
+
+        data.columnId = columnId;
     }
 
     if (name !== undefined) data.name = name;
-    if (columnId !== undefined) data.columnId = columnId;
-    if (position !== undefined) data.position = position;
 
     const updatedCard = await prisma.card.update({
         where: { id: cardId },
