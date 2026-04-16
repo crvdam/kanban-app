@@ -117,6 +117,40 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
     });
 
+    const moveCard = useMutation({
+        mutationFn: async ({
+            cardId,
+            columnId,
+            positionAbove,
+            positionBelow,
+        }: {
+            cardId: string;
+            columnId: string;
+            positionAbove: number | null;
+            positionBelow: number | null;
+        }) => {
+            const result = await fetch(`/api/cards/${cardId}`, {
+                method: "PATCH",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    columnId,
+                    positionAbove,
+                    positionBelow,
+                }),
+            });
+
+            if (!result.ok) throw new Error("Failed to move card");
+            return result.json();
+        },
+        onError: () => {
+            setItems(previousItems.current);
+            queryClient.invalidateQueries({ queryKey: ["board"] });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["board"] });
+        },
+    });
+
     const deleteCard = useMutation({
         mutationFn: async (cardId: string) => {
             const result = await fetch(`/api/cards/${cardId}`, {
@@ -184,7 +218,37 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                             setItems(previousItems.current);
                             return;
                         }
-                        // PATCH LOGICA
+                        if (!event.operation.source) return;
+
+                        const cardId = String(event.operation.source.id);
+
+                        let newColumnId: string | null = null;
+                        let newIndex = -1;
+                        for (const [columnId, ids] of Object.entries(items)) {
+                            const index = ids.indexOf(cardId);
+                            if (index !== -1) {
+                                newColumnId = columnId;
+                                newIndex = index;
+                                break;
+                            }
+                        }
+                        if (!newColumnId) return;
+
+                        const cardsInNewColumn = items[newColumnId];
+                        const aboveId = cardsInNewColumn[newIndex - 1];
+                        const belowId = cardsInNewColumn[newIndex + 1];
+
+                        const allCards = board?.columns.flatMap((c) => c.cards);
+                        const posAt = (id?: string) =>
+                            allCards?.find((c) => c.id === id)?.position ??
+                            null;
+
+                        moveCard.mutate({
+                            cardId,
+                            columnId: newColumnId,
+                            positionAbove: posAt(aboveId),
+                            positionBelow: posAt(belowId),
+                        });
                     }}
                 >
                     <div className={styles.columnContainer}>
