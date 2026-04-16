@@ -37,9 +37,9 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         if (board) {
             setItems(
                 Object.fromEntries(
-                    board.columns.map((col) => [
-                        col.id,
-                        col.cards.map((c) => c.id),
+                    board.columns.map((column) => [
+                        column.id,
+                        column.cards.map((card) => card.id),
                     ]),
                 ),
             );
