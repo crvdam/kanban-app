@@ -252,7 +252,38 @@ export default function BoardClient({ boardId }: { boardId: string }) {
             if (!result.ok) throw new Error("Failed to rename card");
             return result.json();
         },
-        onSuccess: () => {
+        onMutate: async ({ cardId, name }) => {
+            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
+            const previous = queryClient.getQueryData(["board", boardId]);
+
+            queryClient.setQueryData(
+                ["board", boardId],
+                (old: Board | undefined) => {
+                    if (!old) return old;
+
+                    return {
+                        ...old,
+                        columns: old.columns.map((column) => ({
+                            ...column,
+                            cards: column.cards.map((card) =>
+                                card.id === cardId
+                                    ? { ...card, name: name }
+                                    : card,
+                            ),
+                        })),
+                    };
+                },
+            );
+
+            return { previous };
+        },
+        onError: (error, variables, context) => {
+            if (context?.previous) {
+                queryClient.setQueryData(["board", boardId], context.previous);
+            }
+            console.error(error);
+        },
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
         },
     });
