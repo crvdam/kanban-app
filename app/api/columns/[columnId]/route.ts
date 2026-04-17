@@ -72,7 +72,7 @@ export async function POST(
     const { name } = await request.json();
 
     const x = await prisma.card.create({
-        data: { name: name ?? "New card", columnId, position },
+        data: { name: name ?? "New item", columnId, position },
     });
 
     return NextResponse.json(column, { status: 201 });
