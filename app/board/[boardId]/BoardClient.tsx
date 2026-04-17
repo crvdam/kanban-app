@@ -112,7 +112,48 @@ export default function BoardClient({ boardId }: { boardId: string }) {
             if (!result.ok) throw new Error("Failed to create card");
             return result.json();
         },
-        onSuccess: () => {
+        onMutate: async (columnId) => {
+            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
+            const previous = queryClient.getQueryData(["board", boardId]);
+
+            const temporaryId = crypto.randomUUID();
+            queryClient.setQueryData(
+                ["board", boardId],
+                (old: Board | undefined) => {
+                    if (!old) return old;
+
+                    return {
+                        ...old,
+                        columns: old.columns.map((column) => {
+                            return column.id === columnId
+                                ? {
+                                      ...column,
+                                      cards: [
+                                          ...column.cards,
+                                          {
+                                              id: temporaryId,
+                                              name: "New item",
+                                              description: null,
+                                              position: 0,
+                                              columnId: columnId,
+                                          },
+                                      ],
+                                  }
+                                : column;
+                        }),
+                    };
+                },
+            );
+
+            return { previous };
+        },
+        onError: (error, variables, context) => {
+            if (context?.previous) {
+                queryClient.setQueryData(["board", boardId], context.previous);
+            }
+            console.error(error);
+        },
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
         },
     });
