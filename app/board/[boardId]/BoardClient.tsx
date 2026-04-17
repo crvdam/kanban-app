@@ -61,11 +61,6 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
     });
 
-    const handleCreateColumn = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        createColumn.mutate();
-    };
-
     const deleteColumn = useMutation({
         mutationFn: async (columnId: string) => {
             const result = await fetch(`/api/columns/${columnId}`, {
@@ -142,7 +137,6 @@ export default function BoardClient({ boardId }: { boardId: string }) {
             await queryClient.cancelQueries({ queryKey: ["board", boardId] });
             const previous = queryClient.getQueryData(["board", boardId]);
 
-            const temporaryId = crypto.randomUUID();
             queryClient.setQueryData(
                 ["board", boardId],
                 (old: Board | undefined) => {
@@ -157,7 +151,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                                       cards: [
                                           ...column.cards,
                                           {
-                                              id: temporaryId,
+                                              id: crypto.randomUUID(),
                                               name: "New item",
                                               description: null,
                                               position: 0,
@@ -420,25 +414,22 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                                 />
                             );
                         })}
-                        <form
-                            className={styles.addColumnForm}
-                            onSubmit={handleCreateColumn}
+
+                        <button
+                            onClick={() => createColumn.mutate()}
+                            className={styles.addColumnButton}
+                            type="submit"
+                            disabled={createColumn.isPending}
                         >
-                            <button
-                                className={styles.addColumnButton}
-                                type="submit"
-                                disabled={createColumn.isPending}
-                            >
-                                {createColumn.isPending ? (
-                                    <FontAwesomeIcon
-                                        className={styles.spinning}
-                                        icon={faSpinner}
-                                    />
-                                ) : (
-                                    <FontAwesomeIcon icon={faPlus} />
-                                )}
-                            </button>
-                        </form>
+                            {createColumn.isPending ? (
+                                <FontAwesomeIcon
+                                    className={styles.spinning}
+                                    icon={faSpinner}
+                                />
+                            ) : (
+                                <FontAwesomeIcon icon={faPlus} />
+                            )}
+                        </button>
                     </div>
                 </DragDropProvider>
             </main>

@@ -29,6 +29,7 @@
 }
 
 .addColumnButton {
+  align-self: flex-start;
   background-color: var(--bg-secondary);
   border: none;
   color: var(--clr-cta);
