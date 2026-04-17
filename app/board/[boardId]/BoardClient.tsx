@@ -56,7 +56,38 @@ export default function BoardClient({ boardId }: { boardId: string }) {
 
             if (!result.ok) throw new Error("Failed to create column");
         },
-        onSuccess: () => {
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
+            const previous = queryClient.getQueryData(["board", boardId]);
+
+            queryClient.setQueryData(
+                ["board", boardId],
+                (old: Board | undefined) => {
+                    if (!old) return old;
+
+                    return {
+                        ...old,
+                        columns: [
+                            ...old.columns,
+                            {
+                                id: crypto.randomUUID(),
+                                name: "New column",
+                                cards: [],
+                            },
+                        ],
+                    };
+                },
+            );
+
+            return { previous };
+        },
+        onError: (error, variables, context) => {
+            if (context?.previous) {
+                queryClient.setQueryData(["board", boardId], context.previous);
+            }
+            console.error(error);
+        },
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
         },
     });
