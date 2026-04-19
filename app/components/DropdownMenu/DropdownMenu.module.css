@@ -1,6 +1,11 @@
 .dropdownMenuWrapper {
     position: relative;
     cursor: pointer;
+
+    svg {
+        height: 100%;
+        width: 100%;
+    }
 }
 
 .dropdownMenuList {
@@ -12,18 +17,30 @@
     padding: 0.25rem;
     width: max-content;
     border-radius: 5px;
+}
 
-    li {
-        background: var(--bg-primary);
-        padding: 0.25rem 0.5rem;
-        
-        &:not(:last-child) {
-            margin-bottom: 0.25rem;
-        }
+.dropDownMenuItem {
+    background: var(--bg-primary);
+    padding: 0.25rem 0.5rem;
+    
+    &:not(:last-child) {
+        margin-bottom: 0.25rem;
     }
+    
+    span {
+        margin-left: 0.5rem;
+    }
+    
+    svg {
+        color: var(--clr-secondary)
+    }
+}
 
-    li:hover {
-        background: var(--clr-cta);
+.dropDownMenuItem:hover {
+    background: var(--clr-cta);
+    color: var(--bg-primary);
+    
+    svg {
         color: var(--bg-primary);
     }
 }

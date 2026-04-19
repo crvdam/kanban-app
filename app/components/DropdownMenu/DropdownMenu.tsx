@@ -6,6 +6,7 @@ import { useRef, useEffect } from "react";
 
 type MenuItem = {
     label: string;
+    icon?: IconDefinition;
     confirmMessage?: string;
     onClick: () => void;
 };
@@ -14,14 +15,12 @@ type DropdownMenuProps = {
     triggerIcon: IconDefinition;
     items: MenuItem[];
     color?: string;
-    height?: string;
 };
 
 export default function DropdownMenu({
     triggerIcon,
     items,
     color,
-    height,
 }: DropdownMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -43,11 +42,7 @@ export default function DropdownMenu({
     }, []);
 
     return (
-        <div
-            ref={wrapperRef}
-            className={styles.dropdownMenuWrapper}
-            style={{ height }}
-        >
+        <div ref={wrapperRef} className={styles.dropdownMenuWrapper}>
             <FontAwesomeIcon
                 style={{ color }}
                 icon={triggerIcon}
@@ -58,6 +53,7 @@ export default function DropdownMenu({
             >
                 {items.map((item) => (
                     <li
+                        className={styles.dropDownMenuItem}
                         key={item.label}
                         onClick={() => {
                             if (item.confirmMessage) {
@@ -68,7 +64,8 @@ export default function DropdownMenu({
                             }
                         }}
                     >
-                        {item.label}
+                        {item.icon && <FontAwesomeIcon icon={item.icon} />}
+                        <span>{item.label}</span>
                     </li>
                 ))}
             </ul>

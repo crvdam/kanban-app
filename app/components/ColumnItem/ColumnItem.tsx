@@ -6,7 +6,13 @@ import CardItem from "@/app/components/CardItem/CardItem";
 import { useDroppable } from "@dnd-kit/react";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+    faGear,
+    faPlus,
+    faTrashCan,
+    faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
+import DropdownMenu from "@/app/components/DropdownMenu/DropdownMenu";
 
 export default function ColumnItem({
     column,
@@ -62,24 +68,35 @@ export default function ColumnItem({
                                 ? " - " + column.cards.length
                                 : ""}
                         </h3>
-                        <button
-                            className={styles.columnButton}
-                            onClick={() => onCreateCard(column.id)}
-                        >
-                            <FontAwesomeIcon
-                                className={styles.faPlus}
-                                icon={faPlus}
-                            />
-                        </button>
-                        <button
-                            className={styles.columnButton}
-                            onClick={() => onDeleteColumn(column.id)}
-                        >
-                            <FontAwesomeIcon
-                                className={styles.faGear}
-                                icon={faGear}
-                            />
-                        </button>
+                        <DropdownMenu
+                            triggerIcon={faGear}
+                            color="var(--clr-secondary)"
+                            items={[
+                                {
+                                    label: "Create new item",
+                                    icon: faPlus,
+                                    onClick: () => {
+                                        onCreateCard(column.id);
+                                    },
+                                },
+                                {
+                                    label: "Change column name",
+                                    icon: faPenToSquare,
+                                    onClick: () => {
+                                        setIsEditing(true);
+                                    },
+                                },
+                                {
+                                    label: "Remove column",
+                                    icon: faTrashCan,
+                                    confirmMessage:
+                                        "Are you sure you want to delete this column and all its items?",
+                                    onClick: () => {
+                                        onDeleteColumn(column.id);
+                                    },
+                                },
+                            ]}
+                        />
                     </>
                 )}
             </div>
