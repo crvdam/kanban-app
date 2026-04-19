@@ -36,6 +36,7 @@ export default function CardItem({
         <div className={styles.card} ref={ref} data-dragging={isDragging}>
             {isEditing ? (
                 <input
+                    className={styles.cardTitle}
                     value={name}
                     onChange={(event) => {
                         setName(event.target.value);
@@ -57,8 +58,9 @@ export default function CardItem({
             )}
 
             <DropdownMenu
-                triggerIcon={faGear}
+                triggerIcon={faPenToSquare}
                 color="var(--clr-secondary)"
+                size={"14px"}
                 items={[
                     {
                         label: "Edit item",

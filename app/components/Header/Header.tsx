@@ -2,7 +2,11 @@ import styles from "./Header.module.css";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCircleUser,
+    faArrowRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
 export default function Header() {
     return (
@@ -16,12 +20,19 @@ export default function Header() {
                 />
             </div>
 
-            <button
-                className={styles.profileButton}
-                onClick={() => signOut({ callbackUrl: "/login" })}
-            >
-                <FontAwesomeIcon icon={faCircleUser} />
-            </button>
+            <DropdownMenu
+                triggerIcon={faCircleUser}
+                color={"var(--clr-cta"}
+                hover={"var(--clr-cta-hover)"}
+                size={"28px"}
+                items={[
+                    {
+                        label: "Logout",
+                        icon: faArrowRightFromBracket,
+                        onClick: () => signOut({ callbackUrl: "/login" }),
+                    },
+                ]}
+            />
         </header>
     );
 }

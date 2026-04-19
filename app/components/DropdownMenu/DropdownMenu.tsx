@@ -15,12 +15,16 @@ type DropdownMenuProps = {
     triggerIcon: IconDefinition;
     items: MenuItem[];
     color?: string;
+    hover?: string;
+    size?: string;
 };
 
 export default function DropdownMenu({
     triggerIcon,
     items,
     color,
+    hover,
+    size,
 }: DropdownMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -42,11 +46,22 @@ export default function DropdownMenu({
     }, []);
 
     return (
-        <div ref={wrapperRef} className={styles.dropdownMenuWrapper}>
+        <div
+            ref={wrapperRef}
+            className={styles.dropdownMenuWrapper}
+            style={
+                {
+                    height: size,
+                    width: size,
+                    "--icon-color": color,
+                    "--hover-color": hover,
+                } as React.CSSProperties
+            }
+        >
             <FontAwesomeIcon
-                style={{ color }}
                 icon={triggerIcon}
                 onClick={() => setIsOpen(!isOpen)}
+                className={styles.triggerIcon}
             />
             <ul
                 className={`${styles.dropdownMenuList} ${isOpen ? styles.open : ""}`}

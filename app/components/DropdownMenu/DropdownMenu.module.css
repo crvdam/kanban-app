@@ -1,7 +1,24 @@
 .dropdownMenuWrapper {
     position: relative;
     cursor: pointer;
+    flex-shrink: 0;
 }
+
+.triggerIcon {
+    color: var(--icon-color);
+}
+
+.dropdownMenuWrapper:hover .triggerIcon {
+    color: var(--hover-color);
+    transition: 0.2s ease;
+}
+
+.triggerIcon {
+    height: 100%;
+    width: 100%;
+}
+
+
 
 .dropdownMenuList {
     position: absolute;

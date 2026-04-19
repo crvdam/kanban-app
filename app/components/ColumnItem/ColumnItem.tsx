@@ -67,6 +67,8 @@ export default function ColumnItem({
                         <DropdownMenu
                             triggerIcon={faGear}
                             color="var(--clr-primary)"
+                            hover="var(--bg-primary"
+                            size={"1em"}
                             items={[
                                 {
                                     label: "Create new item",

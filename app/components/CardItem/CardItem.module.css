@@ -17,5 +17,6 @@
 .cardTitle {
     flex-grow: 1;
     min-height: 1rem;
-    color: var(--clr-primary)
+    color: var(--clr-primary);
+    margin-right: 1rem;
 }
