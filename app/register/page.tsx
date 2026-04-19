@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Header from "@/app/components/Header/Header";
 import Link from "next/link";
+import styles from "./page.module.css";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function Register() {
     return (
         <>
             <Header />
-            <main>
+            <main className={styles.main}>
                 <div className="genericFormContainer">
                     <h1>Register</h1>
                     <form className="genericForm" onSubmit={handleSubmit}>

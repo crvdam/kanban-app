@@ -1,16 +1,29 @@
 .main {
-  padding-top: 1rem;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
   align-items: stretch;
   justify-content: left;
+  padding-top: 0;
 }
 
 .aside {
-  width: 320px;
-  margin-right: 1rem;
+  display: flex;
+  align-items: center;
   padding: 1rem;
+  margin-bottom: 1rem;
   background-color: var(--bg-primary);
   border-right: 1px solid var(--clr-tertiary);
-  border-top-right-radius: 16px;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.05);
+
+  h1 {
+    margin-bottom: 0;
+    margin-right: auto;
+  }
+
+  p {
+    text-align: right;
+  }
 }
 
 .projectName {
@@ -26,6 +39,7 @@
   gap: 1rem;
   align-items: stretch;
   flex-wrap: wrap;
+  justify-content: stretch;
 }
 
 .addColumnButton {
@@ -36,6 +50,7 @@
   font-size: 18px;
   padding: 0.5rem 0.5rem;
   border-radius: 5px;
+	margin-left: 1rem;
 }
 
 .addColumnButton:hover {
@@ -53,5 +68,28 @@
   }
   to {
     transform: rotate(359deg);
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .main {
+    flex-direction: row;
+    padding-top: 1rem;
+    align-items: stretch;
+    justify-content: left;
+  }
+
+  .aside {
+    display: block;
+    width: 320px;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    border-top-right-radius: 16px;
+    box-shadow: none;
+
+    h1 {
+      margin-bottom: 1rem;
+      margin-right: unset;
+    }
   }
 }

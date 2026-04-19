@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
 import Header from "@/app/components/Header/Header";
+import styles from "./page.module.css";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ export default function Login() {
     return (
         <>
             <Header />
-            <main>
+            <main className={styles.main}>
                 <div className="genericFormContainer">
                     <h1>Login</h1>
                     <form className="genericForm" onSubmit={handleSubmit}>

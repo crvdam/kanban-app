@@ -67,7 +67,7 @@ export default function ColumnItem({
                         <DropdownMenu
                             triggerIcon={faGear}
                             color="var(--clr-primary)"
-                            hover="var(--bg-primary"
+                            hover="var(--bg-primary)"
                             size={"1em"}
                             items={[
                                 {
@@ -109,9 +109,6 @@ export default function ColumnItem({
                         onRename={(id, name) => onRenameCard(id, name)}
                     />
                 ))}
-                {/* <button >
-                    Add task
-                </button>*/}
             </div>
         </div>
     );

@@ -473,24 +473,23 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                                 />
                             );
                         })}
-
-                        <button
-                            onClick={() => createColumn.mutate()}
-                            className={styles.addColumnButton}
-                            type="submit"
-                            disabled={createColumn.isPending}
-                        >
-                            {createColumn.isPending ? (
-                                <FontAwesomeIcon
-                                    className={styles.spinning}
-                                    icon={faSpinner}
-                                />
-                            ) : (
-                                <FontAwesomeIcon icon={faPlus} />
-                            )}
-                        </button>
                     </div>
                 </DragDropProvider>
+                <button
+                    onClick={() => createColumn.mutate()}
+                    className={styles.addColumnButton}
+                    type="submit"
+                    disabled={createColumn.isPending}
+                >
+                    {createColumn.isPending ? (
+                        <FontAwesomeIcon
+                            className={styles.spinning}
+                            icon={faSpinner}
+                        />
+                    ) : (
+                        <FontAwesomeIcon icon={faPlus} />
+                    )}
+                </button>
             </main>
         </>
     );

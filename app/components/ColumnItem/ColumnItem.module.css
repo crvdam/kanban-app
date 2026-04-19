@@ -1,10 +1,11 @@
 .columnBody {
-  width: 300px;
   height: 100%;
   padding: 0.25rem;
   background-color: var(--bg-secondary);
   border-radius: 0 0 5px 5px;
 }
+
+
 
 .columnHeader {
   background: #b9b4fe;
@@ -21,7 +22,9 @@
 }
 
 .column {
-  overflow: hidden;
+  width: 300px;
+  width: 100%;
+  min-width: 300px;
 }
 
 .columnButton {
@@ -41,4 +44,10 @@
   text-transform: uppercase;
   margin-right: auto;
   font-size: 14px;
+}
+
+@media screen and (min-width: 616px) {
+  .column {
+    width: 300px;
+  }
 }

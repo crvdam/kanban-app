@@ -22,7 +22,7 @@ export default function Header() {
 
             <DropdownMenu
                 triggerIcon={faCircleUser}
-                color={"var(--clr-cta"}
+                color={"var(--clr-cta)"}
                 hover={"var(--clr-cta-hover)"}
                 size={"28px"}
                 items={[

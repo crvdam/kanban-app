@@ -51,7 +51,7 @@ export default function Dashboard() {
     return (
         <>
             <Header />
-            <main>
+            <main className={styles.main}>
                 <div className="genericFormContainer">
                     <h1>My projects</h1>
 

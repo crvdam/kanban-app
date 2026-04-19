@@ -83,14 +83,6 @@ h3 {
   font-size: 16px;
 }
 
-main {
-  display: flex;
-  align-items: flex-start;
-  padding-top: 4rem;
-  justify-content: center;
-  min-height: 100dvh;
-}
-
 ul {
   list-style-type: none;
 }
