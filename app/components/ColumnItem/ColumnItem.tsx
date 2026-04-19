@@ -58,10 +58,7 @@ export default function ColumnItem({
                     />
                 ) : (
                     <>
-                        <h3
-                            className={styles.columnTitle}
-                            onClick={() => setIsEditing(true)}
-                        >
+                        <h3 className={styles.columnTitle}>
                             {column.name}
                             {column.cards.length
                                 ? " - " + column.cards.length
@@ -69,7 +66,7 @@ export default function ColumnItem({
                         </h3>
                         <DropdownMenu
                             triggerIcon={faGear}
-                            color="var(--clr-secondary)"
+                            color="var(--clr-primary)"
                             items={[
                                 {
                                     label: "Create new item",
