@@ -1,0 +1,86 @@
+.dropdownMenuWrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdownMenuList {
+    position: absolute;
+    right: 90%;
+    top: 100%;
+    display: none;
+    background:var(--bg-tertiary);
+    padding: 0.25rem;
+    width: max-content;
+    border-radius: 5px;
+
+    li {
+        background: var(--bg-primary);
+        padding: 0.25rem 0.5rem;
+        
+        &:not(:last-child) {
+            margin-bottom: 0.25rem;
+        }
+    }
+
+    li:hover {
+        background: var(--clr-cta);
+        color: var(--bg-primary);
+    }
+}
+
+.dropdownMenuList.open {
+    display: block;
+    animation: rotateMenu 200ms ease-in-out forwards;
+    transform-origin: top right;
+}
+    
+@keyframes rotateMenu {
+    0% {
+        transform: rotateX(-90deg);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+.confirmationOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirmationWrapper {
+    padding: 2rem 3rem;
+    background-color: var(--bg-primary);
+    box-shadow: 2px 2px 1px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.confirmMessage{
+    margin-bottom: 1.5rem;
+}
+
+.confirmButton {
+    padding: 0.25rem 1rem;
+    background-color: rgb(1, 211, 1);
+}
+
+.confirmButton:hover {
+    background-color: rgb(2, 168, 2);
+}
+
+.cancelButton {
+    margin-right: 2rem;
+    background: none;
+    color: rgb(255, 0, 0);
+}
+
+.cancelButton:hover {
+    color: rgb(180, 0, 0);
+    background: none;
+}
