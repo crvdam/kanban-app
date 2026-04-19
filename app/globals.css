@@ -84,11 +84,11 @@ h3 {
 }
 
 main {
-    display: flex;
-    align-items: flex-start;
-    padding-top: 4rem;
-    justify-content: center;
-    height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4rem;
+  justify-content: center;
+  min-height: 100dvh;
 }
 
 ul {
