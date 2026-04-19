@@ -40,6 +40,7 @@
   align-items: stretch;
   flex-wrap: wrap;
   justify-content: stretch;
+  padding: 0 3rem;
 }
 
 .addColumnButton {
@@ -92,4 +93,9 @@
       margin-right: unset;
     }
   }
+
+  .columnContainer {
+    padding: 0;
+  }
+
 }
