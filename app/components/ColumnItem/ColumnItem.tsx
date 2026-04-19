@@ -5,7 +5,6 @@ import { useState } from "react";
 import CardItem from "@/app/components/CardItem/CardItem";
 import { useDroppable } from "@dnd-kit/react";
 import { CollisionPriority } from "@dnd-kit/abstract";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faGear,
     faPlus,
