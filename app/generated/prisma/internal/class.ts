@@ -34,6 +34,10 @@ const config: runtime.GetPrismaClientConfig = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -41,7 +45,7 @@ const config: runtime.GetPrismaClientConfig = {
     "isCustomOutput": true
   },
   "relativePath": "../../../prisma",
-  "clientVersion": "6.19.2",
+  "clientVersion": "6.19.3",
   "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
   "datasourceNames": [
     "db"
@@ -56,8 +60,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  email     String   @unique\n  password  String\n  boards    Board[]\n  createdAt DateTime @default(now())\n}\n\nmodel Account {\n  id     String @id @default(cuid())\n  userId String\n}\n\nmodel Board {\n  id        String   @id @default(cuid())\n  name      String\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  columns   Column[]\n  createdAt DateTime @default(now())\n}\n\nmodel Column {\n  id       String @id @default(cuid())\n  name     String\n  position Float\n  boardId  String\n  board    Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)\n  cards    Card[]\n}\n\nmodel Card {\n  id          String   @id @default(cuid())\n  name        String\n  description String?\n  position    Float\n  columnId    String\n  column      Column   @relation(fields: [columnId], references: [id], onDelete: Cascade)\n  createdAt   DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "3b06c43cf2c4df800d4eb45bd4c93f682ac3caedb3bfe47dc4c0aedaff764473",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../app/generated/prisma\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  email     String   @unique\n  password  String\n  boards    Board[]\n  createdAt DateTime @default(now())\n}\n\nmodel Account {\n  id     String @id @default(cuid())\n  userId String\n}\n\nmodel Board {\n  id        String   @id @default(cuid())\n  name      String\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  columns   Column[]\n  createdAt DateTime @default(now())\n}\n\nmodel Column {\n  id       String @id @default(cuid())\n  name     String\n  position Float\n  boardId  String\n  board    Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)\n  cards    Card[]\n}\n\nmodel Card {\n  id          String   @id @default(cuid())\n  name        String\n  description String?\n  position    Float\n  columnId    String\n  column      Column   @relation(fields: [columnId], references: [id], onDelete: Cascade)\n  createdAt   DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "9763461e42f81ce1c7a2cdd5fed2bf34108aeeca37674d955ca70bd509bea582",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},
