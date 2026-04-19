@@ -5,7 +5,9 @@
     padding: 0.5rem;
     min-height: 6rem;
     margin-bottom: 0.5rem;
-    box-shadow: 2px 2px 1px rgba(0,0,0,0.05)
+    box-shadow: 2px 2px 1px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: flex-start;
 }
 
 .card:hover {
@@ -13,6 +15,7 @@
 }
 
 .cardTitle {
+    flex-grow: 1;
     min-height: 1rem;
     color: var(--clr-primary)
 }

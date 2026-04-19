@@ -2,6 +2,12 @@ import { Card } from "@/app/types";
 import styles from "./CardItem.module.css";
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
+import DropdownMenu from "@/app/components/DropdownMenu/DropdownMenu";
+import {
+    faGear,
+    faTrashCan,
+    faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function CardItem({
     card,
@@ -47,15 +53,31 @@ export default function CardItem({
                     autoFocus
                 />
             ) : (
-                <p
-                    className={styles.cardTitle}
-                    onClick={() => setIsEditing(true)}
-                >
-                    {card.name}
-                </p>
+                <p className={styles.cardTitle}>{card.name}</p>
             )}
 
-            <button onClick={() => onDelete(card.id)}>Delete card</button>
+            <DropdownMenu
+                triggerIcon={faGear}
+                color="var(--clr-secondary)"
+                items={[
+                    {
+                        label: "Edit item",
+                        icon: faPenToSquare,
+                        onClick: () => {
+                            setIsEditing(true);
+                        },
+                    },
+                    {
+                        label: "Remove item",
+                        icon: faTrashCan,
+                        confirmMessage:
+                            "Are you sure you want to remove this item?",
+                        onClick: () => {
+                            onDelete(card.id);
+                        },
+                    },
+                ]}
+            />
         </div>
     );
 }
