@@ -25,7 +25,10 @@ export async function DELETE(
     });
 
     if (!card) {
-        return NextResponse.json({ error: "Card not found" }, { status: 404 });
+        return NextResponse.json(
+            { message: "Card not found" },
+            { status: 200 },
+        );
     }
 
     if (card.column.board.userId !== session.user.id) {
