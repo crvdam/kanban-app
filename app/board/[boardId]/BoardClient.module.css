@@ -1,101 +1,105 @@
 .main {
-  display: flex;
-  min-height: 100dvh;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: left;
-  padding-top: 0;
+    display: flex;
+    height: 100dvh;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: left;
+    padding-top: 0;
 }
 
 .aside {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: var(--bg-primary);
-  border-right: 1px solid var(--clr-tertiary);
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--clr-tertiary);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
 
-  h1 {
-    margin-bottom: 0;
-    margin-right: auto;
-  }
+    h1 {
+        margin-bottom: 0;
+        margin-right: auto;
+    }
 
-  p {
-    text-align: right;
-  }
+    p {
+        text-align: right;
+    }
 }
 
 .projectName {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .faCaretLeft {
-  vertical-align: -0.2em;
+    vertical-align: -0.2em;
 }
 
 .columnContainer {
-  display: flex;
-  gap: 1rem;
-  align-items: stretch;
-  flex-wrap: wrap;
-  justify-content: stretch;
-  padding: 0 3rem;
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    padding: 0 3rem;
 }
 
 .addColumnButton {
-  align-self: flex-start;
-  background-color: var(--bg-secondary);
-  border: none;
-  color: var(--clr-cta);
-  font-size: 18px;
-  padding: 0.5rem 0.5rem;
-  border-radius: 5px;
-	margin-left: 1rem;
+    align-self: flex-start;
+    background-color: var(--bg-secondary);
+    border: none;
+    color: var(--clr-cta);
+    font-size: 18px;
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    margin: auto;
 }
 
 .addColumnButton:hover {
-  background-color: var(--clr-cta-hover);
-  color: var(--bg-primary);
+    background-color: var(--clr-cta-hover);
+    color: var(--bg-primary);
 }
 
 .spinning {
-   animation: rotation 2s infinite linear;
+    animation: rotation 2s infinite linear;
 }
 
 @keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
 }
 
 @media screen and (min-width: 1500px) {
-  .main {
-    flex-direction: row;
-    padding-top: 1rem;
-    align-items: stretch;
-    justify-content: left;
-  }
-
-  .aside {
-    display: block;
-    width: 320px;
-    margin-right: 1rem;
-    margin-bottom: 0;
-    border-top-right-radius: 16px;
-    box-shadow: none;
-
-    h1 {
-      margin-bottom: 1rem;
-      margin-right: unset;
+    .main {
+        flex-direction: row;
+        padding-top: 1rem;
+        align-items: stretch;
+        justify-content: left;
     }
-  }
 
-  .columnContainer {
-    padding: 0;
-  }
+    .aside {
+        display: block;
+        width: 320px;
+        margin-right: 1rem;
+        margin-bottom: 0;
+        border-top-right-radius: 16px;
+        box-shadow: none;
 
+        h1 {
+            margin-bottom: 1rem;
+            margin-right: unset;
+        }
+    }
+
+    .columnContainer {
+        padding: 0;
+    }
+
+    .addColumnButton {
+        margin: unset;
+        margin-left: 1rem;
+    }
 }

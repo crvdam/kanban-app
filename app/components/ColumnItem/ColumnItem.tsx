@@ -1,17 +1,17 @@
-"use client";
-import { Column, Card } from "@/app/types";
-import styles from "./ColumnItem.module.css";
-import { useState } from "react";
-import CardItem from "@/app/components/CardItem/CardItem";
-import { useDroppable } from "@dnd-kit/react";
-import { CollisionPriority } from "@dnd-kit/abstract";
+'use client';
+import { Column, Card } from '@/app/types';
+import styles from './ColumnItem.module.css';
+import { useState } from 'react';
+import CardItem from '@/app/components/CardItem/CardItem';
+import { useDroppable } from '@dnd-kit/react';
+import { CollisionPriority } from '@dnd-kit/abstract';
 import {
     faGear,
     faPlus,
     faTrashCan,
     faPenToSquare,
-} from "@fortawesome/free-solid-svg-icons";
-import DropdownMenu from "@/app/components/DropdownMenu/DropdownMenu";
+} from '@fortawesome/free-solid-svg-icons';
+import DropdownMenu from '@/app/components/DropdownMenu/DropdownMenu';
 
 export default function ColumnItem({
     column,
@@ -30,15 +30,12 @@ export default function ColumnItem({
 }) {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(column.name);
-    const { isDropTarget, ref } = useDroppable({
+    const { ref } = useDroppable({
         id: column.id,
-        type: "column",
-        accept: "item",
-        collisionPriority: CollisionPriority.Low,
+        type: 'column',
+        accept: 'item',
+        collisionPriority: CollisionPriority.High,
     });
-    const style = isDropTarget
-        ? { background: "var(--bg-primary-hover)" }
-        : undefined;
 
     return (
         <div className={styles.column}>
@@ -52,7 +49,7 @@ export default function ColumnItem({
                             setIsEditing(false);
                         }}
                         onKeyDown={(e) =>
-                            e.key === "Enter" && e.currentTarget.blur()
+                            e.key === 'Enter' && e.currentTarget.blur()
                         }
                         autoFocus
                     />
@@ -61,34 +58,34 @@ export default function ColumnItem({
                         <h3 className={styles.columnTitle}>
                             {column.name}
                             {column.cards.length
-                                ? " - " + column.cards.length
-                                : ""}
+                                ? ' - ' + column.cards.length
+                                : ''}
                         </h3>
                         <DropdownMenu
                             triggerIcon={faGear}
                             color="var(--clr-primary)"
                             hover="var(--bg-primary)"
-                            size={"1em"}
+                            size={'1em'}
                             items={[
                                 {
-                                    label: "Create new item",
+                                    label: 'Create new item',
                                     icon: faPlus,
                                     onClick: () => {
                                         onCreateCard(column.id);
                                     },
                                 },
                                 {
-                                    label: "Change column name",
+                                    label: 'Change column name',
                                     icon: faPenToSquare,
                                     onClick: () => {
                                         setIsEditing(true);
                                     },
                                 },
                                 {
-                                    label: "Remove column",
+                                    label: 'Remove column',
                                     icon: faTrashCan,
                                     confirmMessage:
-                                        "Are you sure you want to delete this column and all its items?",
+                                        'Are you sure you want to delete this column and all its items?',
                                     onClick: () => {
                                         onDeleteColumn(column.id);
                                     },
@@ -98,7 +95,7 @@ export default function ColumnItem({
                     </>
                 )}
             </div>
-            <div className={styles.columnBody} ref={ref} style={style}>
+            <div className={styles.columnBody} ref={ref}>
                 {column.cards?.map((card: Card, index: number) => (
                     <CardItem
                         key={card.id}

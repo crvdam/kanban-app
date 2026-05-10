@@ -1,53 +1,52 @@
 .columnBody {
-  height: 100%;
-  padding: 0.25rem;
-  background-color: var(--bg-secondary);
-  border-radius: 0 0 5px 5px;
+    height: 100%;
+    padding: 0.25rem;
+    background-color: var(--bg-secondary);
+    border-radius: 0 0 5px 5px;
 }
-
-
 
 .columnHeader {
-  background: #b9b4fe;
-  padding: 1rem;
-  border-radius: 16px 16px 0 0 ;
-  display: flex;
-  align-items: center;
+    background: #b9b4fe;
+    padding: 1rem;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    align-items: center;
 }
 
-.faGear, .faPlus {
-  color: var(--clr-secondary);
-  font-size: 12px;
+.faGear,
+.faPlus {
+    color: var(--clr-secondary);
+    font-size: 12px;
     vertical-align: 0em;
 }
 
 .column {
-  width: 300px;
-  width: 100%;
-  min-width: 300px;
+    width: 300px;
+    width: 100%;
+    min-width: 300px;
 }
 
 .columnButton {
-  background: none;
-  padding: 0.4rem;
+    background: none;
+    padding: 0.4rem;
 }
 
 .columnButton:hover {
-
-  .faGear, .faPlus {
-    color: var(--bg-primary);
-  }
+    .faGear,
+    .faPlus {
+        color: var(--bg-primary);
+    }
 }
 
 .columnTitle {
-  color: var(--clr-primary);
-  text-transform: uppercase;
-  margin-right: auto;
-  font-size: 14px;
+    color: var(--clr-primary);
+    text-transform: uppercase;
+    margin-right: auto;
+    font-size: 14px;
 }
 
 @media screen and (min-width: 616px) {
-  .column {
-    width: 300px;
-  }
+    .column {
+        width: 300px;
+    }
 }

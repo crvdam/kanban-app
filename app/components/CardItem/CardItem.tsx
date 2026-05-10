@@ -1,13 +1,13 @@
-import { Card } from "@/app/types";
-import styles from "./CardItem.module.css";
-import { useState } from "react";
-import { useSortable } from "@dnd-kit/react/sortable";
-import DropdownMenu from "@/app/components/DropdownMenu/DropdownMenu";
+import { Card } from '@/app/types';
+import styles from './CardItem.module.css';
+import { useState } from 'react';
+import { useSortable } from '@dnd-kit/react/sortable';
+import DropdownMenu from '@/app/components/DropdownMenu/DropdownMenu';
 import {
     faGear,
     faTrashCan,
     faPenToSquare,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function CardItem({
     card,
@@ -27,8 +27,8 @@ export default function CardItem({
     const { ref, isDragging } = useSortable({
         id: card.id,
         index,
-        type: "item",
-        accept: "item",
+        type: 'item',
+        accept: 'item',
         group: column,
     });
 
@@ -49,7 +49,7 @@ export default function CardItem({
                         setIsEditing(false);
                     }}
                     onKeyDown={(event) =>
-                        event.key === "Enter" && event.currentTarget.blur()
+                        event.key === 'Enter' && event.currentTarget.blur()
                     }
                     autoFocus
                 />
@@ -60,20 +60,20 @@ export default function CardItem({
             <DropdownMenu
                 triggerIcon={faPenToSquare}
                 color="var(--clr-secondary)"
-                size={"14px"}
+                size={'14px'}
                 items={[
                     {
-                        label: "Edit item",
+                        label: 'Edit item',
                         icon: faPenToSquare,
                         onClick: () => {
                             setIsEditing(true);
                         },
                     },
                     {
-                        label: "Remove item",
+                        label: 'Remove item',
                         icon: faTrashCan,
                         confirmMessage:
-                            "Are you sure you want to remove this item?",
+                            'Are you sure you want to remove this item?',
                         onClick: () => {
                             onDelete(card.id);
                         },
