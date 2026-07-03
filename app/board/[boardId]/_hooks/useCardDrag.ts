@@ -33,10 +33,10 @@ export function useCardDrag(boardId: string, board: Board | undefined) {
         mutationFn: boardApi.moveCard,
         onError: () => {
             setItems(previousItems.current);
-            queryClient.invalidateQueries({ queryKey: ['board'] });
+            queryClient.invalidateQueries({ queryKey: ['board', boardId] });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
+            queryClient.invalidateQueries({ queryKey: ['board', boardId] });
         },
     });
 
