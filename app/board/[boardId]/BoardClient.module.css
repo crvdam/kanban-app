@@ -58,6 +58,7 @@
     .main {
         align-items: stretch;
         justify-content: left;
+        padding: 1rem;
     }
 
     .columnContainer {
