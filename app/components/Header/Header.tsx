@@ -10,11 +10,7 @@ import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import Link from 'next/link';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 
-export default function Header({
-    boardName,
-}: {
-    boardName: string | undefined;
-}) {
+export default function Header({ boardName }: { boardName?: string }) {
     return (
         <header className={styles.header}>
             <div className={styles.logoWrapper}>
