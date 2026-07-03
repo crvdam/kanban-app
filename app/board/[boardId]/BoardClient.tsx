@@ -1,9 +1,9 @@
 'use client';
-
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
-import type { Board, Column, Card } from '@/app/types';
+import type { Column, Card } from '@/app/types';
 import { DragDropProvider } from '@dnd-kit/react';
 import { useEffect, useRef, useState } from 'react';
+import { useBoardMutations } from './_hooks/useBoardMutations';
 import Link from 'next/link';
 import * as boardApi from '@/lib/boardApi';
 import ColumnItem from '@/app/components/ColumnItem/ColumnItem';
@@ -25,6 +25,15 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         queryFn: () => boardApi.fetchColumns(boardId),
     });
 
+    const {
+        createColumn,
+        deleteColumn,
+        renameColumn,
+        createCard,
+        deleteCard,
+        renameCard,
+    } = useBoardMutations(boardId);
+
     const [items, setItems] = useState<{ [columnId: string]: string[] }>({});
     const previousItems = useRef(items);
 
@@ -41,159 +50,6 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         }
     }, [board]);
 
-    const createColumn = useMutation({
-        mutationFn: () => boardApi.createColumn(boardId),
-        onMutate: async (boardId) => {
-            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
-            const previous = queryClient.getQueryData(['board', boardId]);
-
-            queryClient.setQueryData(
-                ['board', boardId],
-                (old: Board | undefined) => {
-                    if (!old) return old;
-
-                    return {
-                        ...old,
-                        columns: [
-                            ...old.columns,
-                            {
-                                id: crypto.randomUUID(),
-                                name: 'New column',
-                                cards: [],
-                            },
-                        ],
-                    };
-                },
-            );
-
-            return { previous };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previous) {
-                queryClient.setQueryData(['board', boardId], context.previous);
-            }
-            console.error(error);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
-
-    const deleteColumn = useMutation({
-        mutationFn: boardApi.deleteColumn,
-        onMutate: async (columnId) => {
-            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
-            const previous = queryClient.getQueryData(['board', boardId]);
-
-            queryClient.setQueryData(
-                ['board', boardId],
-                (old: Board | undefined) => {
-                    if (!old) return old;
-
-                    return {
-                        ...old,
-                        columns: old.columns.filter(
-                            (column) => column.id !== columnId,
-                        ),
-                    };
-                },
-            );
-
-            return { previous };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previous) {
-                queryClient.setQueryData(['board', boardId], context.previous);
-            }
-            console.error(error);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
-
-    const renameColumn = useMutation({
-        mutationFn: boardApi.renameColumn,
-        onMutate: async ({ columnId, name }) => {
-            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
-            const previous = queryClient.getQueryData(['board', boardId]);
-
-            queryClient.setQueryData(
-                ['board', boardId],
-                (old: Board | undefined) => {
-                    if (!old) return old;
-
-                    return {
-                        ...old,
-                        columns: old.columns.map((column) =>
-                            column.id === columnId
-                                ? { ...column, name: name }
-                                : column,
-                        ),
-                    };
-                },
-            );
-
-            return { previous };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previous) {
-                queryClient.setQueryData(['board', boardId], context.previous);
-            }
-            console.error(error);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
-
-    const createCard = useMutation({
-        mutationFn: boardApi.createCard,
-        onMutate: async (columnId) => {
-            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
-            const previous = queryClient.getQueryData(['board', boardId]);
-
-            queryClient.setQueryData(
-                ['board', boardId],
-                (old: Board | undefined) => {
-                    if (!old) return old;
-
-                    return {
-                        ...old,
-                        columns: old.columns.map((column) => {
-                            return column.id === columnId
-                                ? {
-                                      ...column,
-                                      cards: [
-                                          ...column.cards,
-                                          {
-                                              id: crypto.randomUUID(),
-                                              name: 'New item',
-                                              description: null,
-                                              position: 0,
-                                              columnId: columnId,
-                                          },
-                                      ],
-                                  }
-                                : column;
-                        }),
-                    };
-                },
-            );
-
-            return { previous };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previous) {
-                queryClient.setQueryData(['board', boardId], context.previous);
-            }
-            console.error(error);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
-
     const moveCard = useMutation({
         mutationFn: boardApi.moveCard,
         onError: () => {
@@ -201,80 +57,6 @@ export default function BoardClient({ boardId }: { boardId: string }) {
             queryClient.invalidateQueries({ queryKey: ['board'] });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
-
-    const deleteCard = useMutation({
-        mutationFn: boardApi.deleteCard,
-        onMutate: async (cardId) => {
-            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
-            const previous = queryClient.getQueryData(['board', boardId]);
-
-            queryClient.setQueryData(
-                ['board', boardId],
-                (old: Board | undefined) => {
-                    if (!old) return old;
-
-                    return {
-                        ...old,
-                        columns: old.columns.map((column) => ({
-                            ...column,
-                            cards: column.cards.filter(
-                                (card) => card.id !== cardId,
-                            ),
-                        })),
-                    };
-                },
-            );
-
-            return { previous };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previous) {
-                queryClient.setQueryData(['board', boardId], context.previous);
-            }
-            console.error(error);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
-
-    const renameCard = useMutation({
-        mutationFn: boardApi.renameCard,
-        onMutate: async ({ cardId, name }) => {
-            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
-            const previous = queryClient.getQueryData(['board', boardId]);
-
-            queryClient.setQueryData(
-                ['board', boardId],
-                (old: Board | undefined) => {
-                    if (!old) return old;
-
-                    return {
-                        ...old,
-                        columns: old.columns.map((column) => ({
-                            ...column,
-                            cards: column.cards.map((card) =>
-                                card.id === cardId
-                                    ? { ...card, name: name }
-                                    : card,
-                            ),
-                        })),
-                    };
-                },
-            );
-
-            return { previous };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previous) {
-                queryClient.setQueryData(['board', boardId], context.previous);
-            }
-            console.error(error);
-        },
-        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
