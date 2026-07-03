@@ -1,32 +1,37 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Header from "@/app/components/Header/Header";
-import Link from "next/link";
-import styles from "./page.module.css";
+import { useState } from 'react';
+import Header from '@/app/components/Header/Header';
+import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function Register() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const response = await fetch("/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
 
         const data = await response.json();
 
         if (!response.ok) {
+            if (!data.error) {
+                setError('An error has occured');
+                return;
+            }
+
             setError(data.error);
             return;
         }
 
-        window.location.href = "/login";
+        window.location.href = '/login';
     }
 
     return (
@@ -54,8 +59,8 @@ export default function Register() {
                         <button type="submit">Register</button>
                     </form>
                     <p>
-                        Already have an account?{" "}
-                        <Link href={"/login"}>Login here</Link>
+                        Already have an account?{' '}
+                        <Link href={'/login'}>Login here</Link>
                     </p>
                 </div>
             </main>
