@@ -23,7 +23,6 @@ export function useCardDrag(boardId: string) {
             }
         },
         onSuccess: (updatedCard) => {
-            // reconcile the server-owned position; no full refetch
             queryClient.setQueryData(boardKey, (old: Board | undefined) =>
                 old ? replaceCard(old, updatedCard) : old,
             );
