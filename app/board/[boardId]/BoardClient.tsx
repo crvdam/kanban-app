@@ -4,17 +4,12 @@ import type { Column, Card } from '@/app/types';
 import { DragDropProvider } from '@dnd-kit/react';
 import { useCardDrag } from './_hooks/useCardDrag';
 import { useBoardMutations } from './_hooks/useBoardMutations';
-import Link from 'next/link';
 import * as boardApi from '@/lib/boardApi';
 import ColumnItem from '@/app/components/ColumnItem/ColumnItem';
 import Header from '@/app/components/Header/Header';
 import styles from './BoardClient.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faPlus,
-    faSpinner,
-    faCaretLeft,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export default function BoardClient({ boardId }: { boardId: string }) {
     const { data: board, isLoading } = useQuery({
@@ -38,24 +33,9 @@ export default function BoardClient({ boardId }: { boardId: string }) {
 
     return (
         <>
-            <Header />
+            <Header boardName={board ? board.name : undefined} />
 
             <main className={styles.main}>
-                <aside className={styles.aside}>
-                    <h1 className={styles.projectName}>
-                        projects / {board ? board.name : 'My board'}
-                    </h1>
-                    <Link href="/dashboard">
-                        <p>
-                            <FontAwesomeIcon
-                                className={styles.faCaretLeft}
-                                icon={faCaretLeft}
-                            />
-                            Back to overview
-                        </p>
-                    </Link>
-                </aside>
-
                 <DragDropProvider
                     onDragStart={onDragStart}
                     onDragOver={onDragOver}

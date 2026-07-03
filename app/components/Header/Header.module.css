@@ -5,8 +5,9 @@
     background-color: var(--bg-primary);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding-right: 1rem;
+    margin-bottom: 1rem;
+    justify-content: space-between;
 }
 
 .logoWrapper {
@@ -15,6 +16,12 @@
     img {
         height: 100%;
     }
+}
+
+.headerNav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .profileButton {
@@ -26,6 +33,14 @@
 .profileButton:hover {
     background: none;
     color: var(--clr-cta-hover);
+}
+
+.projectName {
+    font-size: 20px;
+}
+
+.faCaretLeft {
+    vertical-align: -0.2em;
 }
 
 @media screen and (min-width: 616px) {

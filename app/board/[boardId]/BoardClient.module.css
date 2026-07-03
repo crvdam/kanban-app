@@ -2,37 +2,9 @@
     flex: 1;
     min-height: 0;
     display: flex;
-    flex-direction: column;
     align-items: stretch;
     justify-content: left;
     padding-top: 0;
-}
-
-.aside {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background-color: var(--bg-primary);
-    border-right: 1px solid var(--clr-tertiary);
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
-
-    h1 {
-        margin-bottom: 0;
-        margin-right: auto;
-    }
-
-    p {
-        text-align: right;
-    }
-}
-
-.projectName {
-    font-size: 20px;
-}
-
-.faCaretLeft {
-    vertical-align: -0.2em;
 }
 
 .columnContainer {
@@ -43,7 +15,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     min-width: 0;
-    padding: 0 3rem;
+    padding: 0 1rem;
     height: 100%;
 }
 
@@ -60,7 +32,8 @@
     font-size: 18px;
     padding: 0.5rem 0.5rem;
     border-radius: 5px;
-    margin: auto;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .addColumnButton:hover {
@@ -83,33 +56,12 @@
 
 @media screen and (min-width: 1500px) {
     .main {
-        flex-direction: row;
         padding-top: 1rem;
         align-items: stretch;
         justify-content: left;
     }
 
-    .aside {
-        display: block;
-        width: 320px;
-        margin-right: 1rem;
-        margin-bottom: 0;
-        border-top-right-radius: 16px;
-        box-shadow: none;
-
-        h1 {
-            margin-bottom: 1rem;
-            margin-right: unset;
-        }
-    }
-
     .columnContainer {
         padding: 0;
-    }
-
-    .addColumnButton {
-        margin: unset;
-        margin-left: 1rem;
-        margin-right: 1rem;
     }
 }
