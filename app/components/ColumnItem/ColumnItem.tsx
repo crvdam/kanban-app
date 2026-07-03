@@ -82,10 +82,10 @@ export default function ColumnItem({
                                     },
                                 },
                                 {
-                                    label: 'Remove column',
+                                    label: 'Delete column',
                                     icon: faTrashCan,
                                     confirmMessage:
-                                        'Are you sure you want to delete this column and all its items?',
+                                        'Are you sure you want to delete this column and all its content?',
                                     onClick: () => {
                                         onDeleteColumn(column.id);
                                     },
