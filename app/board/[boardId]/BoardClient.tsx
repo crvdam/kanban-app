@@ -1,15 +1,14 @@
 'use client';
-import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type { Column, Card } from '@/app/types';
 import { DragDropProvider } from '@dnd-kit/react';
-import { useEffect, useRef, useState } from 'react';
+import { useCardDrag } from './_hooks/useCardDrag';
 import { useBoardMutations } from './_hooks/useBoardMutations';
 import Link from 'next/link';
 import * as boardApi from '@/lib/boardApi';
 import ColumnItem from '@/app/components/ColumnItem/ColumnItem';
 import Header from '@/app/components/Header/Header';
 import styles from './BoardClient.module.css';
-import { move } from '@dnd-kit/helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faPlus,
@@ -18,8 +17,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function BoardClient({ boardId }: { boardId: string }) {
-    const queryClient = useQueryClient();
-
     const { data: board, isLoading } = useQuery({
         queryKey: ['board', boardId],
         queryFn: () => boardApi.fetchColumns(boardId),
@@ -34,36 +31,15 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         renameCard,
     } = useBoardMutations(boardId);
 
-    const [items, setItems] = useState<{ [columnId: string]: string[] }>({});
-    const previousItems = useRef(items);
-
-    useEffect(() => {
-        if (board) {
-            setItems(
-                Object.fromEntries(
-                    board.columns.map((column: Column) => [
-                        column.id,
-                        column.cards.map((card) => card.id),
-                    ]),
-                ),
-            );
-        }
-    }, [board]);
-
-    const moveCard = useMutation({
-        mutationFn: boardApi.moveCard,
-        onError: () => {
-            setItems(previousItems.current);
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] });
-        },
-    });
+    const { items, onDragStart, onDragOver, onDragEnd } = useCardDrag(
+        boardId,
+        board,
+    );
 
     return (
         <>
             <Header />
+
             <main className={styles.main}>
                 <aside className={styles.aside}>
                     <h1 className={styles.projectName}>
@@ -81,51 +57,9 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                 </aside>
 
                 <DragDropProvider
-                    onDragStart={() => {
-                        previousItems.current = items;
-                    }}
-                    onDragOver={(event) => {
-                        setItems((items) => move(items, event));
-                    }}
-                    onDragEnd={(event) => {
-                        if (event.canceled) {
-                            setItems(previousItems.current);
-                            return;
-                        }
-                        if (!event.operation.source) return;
-
-                        const cardId = String(event.operation.source.id);
-
-                        let newColumnId: string | null = null;
-                        let newIndex = -1;
-                        for (const [columnId, ids] of Object.entries(items)) {
-                            const index = ids.indexOf(cardId);
-                            if (index !== -1) {
-                                newColumnId = columnId;
-                                newIndex = index;
-                                break;
-                            }
-                        }
-                        if (!newColumnId) return;
-
-                        const cardsInNewColumn = items[newColumnId];
-                        const aboveId = cardsInNewColumn[newIndex - 1];
-                        const belowId = cardsInNewColumn[newIndex + 1];
-
-                        const allCards = board?.columns.flatMap(
-                            (column: Column) => column.cards,
-                        );
-                        const posAt = (id?: string) =>
-                            allCards?.find((column: Column) => column.id === id)
-                                ?.position ?? null;
-
-                        moveCard.mutate({
-                            cardId,
-                            columnId: newColumnId,
-                            positionAbove: posAt(aboveId),
-                            positionBelow: posAt(belowId),
-                        });
-                    }}
+                    onDragStart={onDragStart}
+                    onDragOver={onDragOver}
+                    onDragEnd={onDragEnd}
                 >
                     <div className={styles.columnContainer}>
                         {board?.columns?.map((column: Column) => {
