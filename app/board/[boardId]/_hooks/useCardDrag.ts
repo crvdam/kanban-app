@@ -1,86 +1,75 @@
-import type { Board, Column } from '@/app/types';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
-import * as boardApi from '@/lib/boardApi';
-import { move } from '@dnd-kit/helpers';
-import type { ComponentProps } from 'react';
+import { useRef, type ComponentProps } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DragDropProvider } from '@dnd-kit/react';
+import { move } from '@dnd-kit/helpers';
+import type { Board } from '@/app/types';
+import * as boardApi from '@/lib/boardApi';
+import { toIdMap, applyIdMap, replaceCard } from '@/lib/reorder';
 
 type ProviderProps = ComponentProps<typeof DragDropProvider>;
 type DragOverEvent = Parameters<NonNullable<ProviderProps['onDragOver']>>[0];
 type DragEndEvent = Parameters<NonNullable<ProviderProps['onDragEnd']>>[0];
 
-export function useCardDrag(boardId: string, board: Board | undefined) {
+export function useCardDrag(boardId: string) {
     const queryClient = useQueryClient();
-
-    const [items, setItems] = useState<{ [columnId: string]: string[] }>({});
-    const previousItems = useRef(items);
-
-    useEffect(() => {
-        if (board) {
-            setItems(
-                Object.fromEntries(
-                    board.columns.map((column: Column) => [
-                        column.id,
-                        column.cards.map((card) => card.id),
-                    ]),
-                ),
-            );
-        }
-    }, [board]);
+    const boardKey = ['board', boardId] as const;
+    const previousBoard = useRef<Board | undefined>(undefined);
 
     const moveCard = useMutation({
         mutationFn: boardApi.moveCard,
         onError: () => {
-            setItems(previousItems.current);
-            queryClient.invalidateQueries({ queryKey: ['board', boardId] });
+            if (previousBoard.current) {
+                queryClient.setQueryData(boardKey, previousBoard.current);
+            }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['board', boardId] });
+        onSuccess: (updatedCard) => {
+            // reconcile the server-owned position; no full refetch
+            queryClient.setQueryData(boardKey, (old: Board | undefined) =>
+                old ? replaceCard(old, updatedCard) : old,
+            );
         },
     });
 
-    const onDragStart = () => (previousItems.current = items);
-    const onDragOver = (event: DragOverEvent) =>
-        setItems((items) => move(items, event));
-    const onDragEnd = (event: DragEndEvent) => {
-        if (event.canceled) {
-            setItems(previousItems.current);
-            return;
-        }
-        if (!event.operation.source) return;
+    const onDragStart = () => {
+        previousBoard.current = queryClient.getQueryData<Board>(boardKey);
+    };
 
-        const cardId = String(event.operation.source.id);
-
-        let newColumnId: string | null = null;
-        let newIndex = -1;
-        for (const [columnId, ids] of Object.entries(items)) {
-            const index = ids.indexOf(cardId);
-            if (index !== -1) {
-                newColumnId = columnId;
-                newIndex = index;
-                break;
-            }
-        }
-        if (!newColumnId) return;
-
-        const cardsInNewColumn = items[newColumnId];
-        const aboveId = cardsInNewColumn[newIndex - 1];
-        const belowId = cardsInNewColumn[newIndex + 1];
-
-        const allCards = board?.columns.flatMap(
-            (column: Column) => column.cards,
-        );
-        const posAt = (id?: string) =>
-            allCards?.find((column) => column.id === id)?.position ?? null;
-
-        moveCard.mutate({
-            cardId,
-            columnId: newColumnId,
-            positionAbove: posAt(aboveId),
-            positionBelow: posAt(belowId),
+    const onDragOver = (event: DragOverEvent) => {
+        queryClient.setQueryData(boardKey, (old: Board | undefined) => {
+            if (!old) return old;
+            return applyIdMap(old, move(toIdMap(old), event));
         });
     };
 
-    return { items, onDragStart, onDragOver, onDragEnd };
+    const onDragEnd = (event: DragEndEvent) => {
+        if (event.canceled) {
+            if (previousBoard.current) {
+                queryClient.setQueryData(boardKey, previousBoard.current);
+            }
+            return;
+        }
+        if (!event.operation.source) return;
+        const cardId = String(event.operation.source.id);
+
+        const board = queryClient.getQueryData<Board>(boardKey);
+        if (!board) return;
+
+        const column = board.columns.find((col) =>
+            col.cards.some((card) => card.id === cardId),
+        );
+        if (!column) return;
+
+        const index = column.cards.findIndex((card) => card.id === cardId);
+        const positionAbove = column.cards[index - 1]?.position ?? null;
+        const positionBelow = column.cards[index + 1]?.position ?? null;
+
+        moveCard.mutate({
+            cardId,
+            columnId: column.id,
+            positionAbove,
+            positionBelow,
+        });
+    };
+
+    return { onDragStart, onDragOver, onDragEnd };
 }

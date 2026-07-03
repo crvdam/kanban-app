@@ -26,10 +26,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         renameCard,
     } = useBoardMutations(boardId);
 
-    const { items, onDragStart, onDragOver, onDragEnd } = useCardDrag(
-        boardId,
-        board,
-    );
+    const { onDragStart, onDragOver, onDragEnd } = useCardDrag(boardId);
 
     return (
         <>
@@ -42,49 +39,21 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                     onDragEnd={onDragEnd}
                 >
                     <div className={styles.columnContainer}>
-                        {board?.columns?.map((column: Column) => {
-                            const cardIds = items[column.id] || [];
-                            const allCards = board.columns.flatMap(
-                                (column: Column) => column.cards,
-                            );
-                            const cardsForColumn = cardIds
-                                .map((id) =>
-                                    allCards.find(
-                                        (card: Card) => card.id === id,
-                                    ),
-                                )
-                                .filter(
-                                    (card): card is Card => card !== undefined,
-                                );
-
-                            return (
-                                <ColumnItem
-                                    key={column.id}
-                                    column={{
-                                        ...column,
-                                        cards: cardsForColumn,
-                                    }}
-                                    onDeleteColumn={(columnId) =>
-                                        deleteColumn.mutate(columnId)
-                                    }
-                                    onRenameColumn={(columnId, name) =>
-                                        renameColumn.mutate({
-                                            columnId,
-                                            name,
-                                        })
-                                    }
-                                    onCreateCard={(columnId) =>
-                                        createCard.mutate(columnId)
-                                    }
-                                    onDeleteCard={(cardId) =>
-                                        deleteCard.mutate(cardId)
-                                    }
-                                    onRenameCard={(cardId, name) =>
-                                        renameCard.mutate({ cardId, name })
-                                    }
-                                />
-                            );
-                        })}
+                        {board?.columns?.map((column: Column) => (
+                            <ColumnItem
+                                key={column.id}
+                                column={column} // ← use it directly, no cardsForColumn
+                                onDeleteColumn={(id) => deleteColumn.mutate(id)}
+                                onRenameColumn={(id, name) =>
+                                    renameColumn.mutate({ columnId: id, name })
+                                }
+                                onCreateCard={(id) => createCard.mutate(id)}
+                                onDeleteCard={(id) => deleteCard.mutate(id)}
+                                onRenameCard={(id, name) =>
+                                    renameCard.mutate({ cardId: id, name })
+                                }
+                            />
+                        ))}
                     </div>
                 </DragDropProvider>
                 <button
