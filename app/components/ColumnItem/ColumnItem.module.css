@@ -46,5 +46,6 @@
 @media screen and (min-width: 616px) {
     .column {
         width: 300px;
+        flex: 0 0 300px;
     }
 }
