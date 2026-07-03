@@ -23,6 +23,9 @@ export function useBoardMutations(boardId: string) {
                             {
                                 id: crypto.randomUUID(),
                                 name: 'New column',
+                                position:
+                                    (old.columns.at(-1)?.position ?? 0) + 1,
+                                boardId,
                                 cards: [],
                             },
                         ],
