@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function DELETE(
     request: Request,
@@ -8,7 +8,7 @@ export async function DELETE(
 ) {
     const session = await auth();
     if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { columnId } = await params;
@@ -20,20 +20,20 @@ export async function DELETE(
 
     if (!column) {
         return NextResponse.json(
-            { error: "Column not found" },
+            { error: 'Column not found' },
             { status: 404 },
         );
     }
 
     if (column.board.userId !== session.user.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     await prisma.column.delete({
         where: { id: columnId },
     });
 
-    return NextResponse.json({ message: "Column deleted" }, { status: 200 });
+    return NextResponse.json({ message: 'Column deleted' }, { status: 200 });
 }
 
 export async function POST(
@@ -42,7 +42,7 @@ export async function POST(
 ) {
     const session = await auth();
     if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { columnId } = await params;
@@ -54,28 +54,28 @@ export async function POST(
 
     if (!column) {
         return NextResponse.json(
-            { error: "Column not found" },
+            { error: 'Column not found' },
             { status: 404 },
         );
     }
 
     if (column.board.userId !== session.user.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     const lastCard = await prisma.card.findFirst({
         where: { columnId },
-        orderBy: { position: "desc" },
+        orderBy: { position: 'desc' },
     });
 
     const position = lastCard ? lastCard.position + 1 : 1;
     const { name } = await request.json();
 
-    const x = await prisma.card.create({
-        data: { name: name ?? "New item", columnId, position },
+    const card = await prisma.card.create({
+        data: { name: name ?? 'New item', columnId, position },
     });
 
-    return NextResponse.json(column, { status: 201 });
+    return NextResponse.json(card, { status: 201 });
 }
 
 export async function PATCH(
@@ -84,7 +84,7 @@ export async function PATCH(
 ) {
     const session = await auth();
     if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { columnId } = await params;
@@ -96,13 +96,13 @@ export async function PATCH(
 
     if (!column) {
         return NextResponse.json(
-            { error: "Column not found" },
+            { error: 'Column not found' },
             { status: 404 },
         );
     }
 
     if (column.board.userId !== session.user.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     const { name } = await request.json();
