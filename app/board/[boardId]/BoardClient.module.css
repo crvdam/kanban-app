@@ -32,8 +32,8 @@
     font-size: 18px;
     padding: 0.5rem 0.5rem;
     border-radius: 5px;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .addColumnButton:hover {
@@ -62,5 +62,10 @@
 
     .columnContainer {
         padding: 0;
+    }
+
+    .addColumnButton {
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 }
