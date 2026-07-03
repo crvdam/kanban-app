@@ -21,8 +21,8 @@
 }
 
 .column {
+    flex: 0 0 300px;
     width: 300px;
-    width: 100%;
     min-width: 300px;
 }
 
