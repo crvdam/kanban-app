@@ -75,7 +75,7 @@ export default function ColumnItem({
                                     },
                                 },
                                 {
-                                    label: 'Change column name',
+                                    label: 'Rename column',
                                     icon: faPenToSquare,
                                     onClick: () => {
                                         setIsEditing(true);
