@@ -1,33 +1,28 @@
-"use client";
+'use client';
 
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import type { Board, Column, Card } from "@/app/types";
-import styles from "./BoardClient.module.css";
-import ColumnItem from "@/app/components/ColumnItem/ColumnItem";
-import Header from "@/app/components/Header/Header";
-import { DragDropProvider } from "@dnd-kit/react";
-import { move } from "@dnd-kit/helpers";
-import { useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
+import type { Board, Column, Card } from '@/app/types';
+import { DragDropProvider } from '@dnd-kit/react';
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import * as boardApi from '@/lib/boardApi';
+import ColumnItem from '@/app/components/ColumnItem/ColumnItem';
+import Header from '@/app/components/Header/Header';
+import styles from './BoardClient.module.css';
+import { move } from '@dnd-kit/helpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faPlus,
     faSpinner,
     faCaretLeft,
-} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function BoardClient({ boardId }: { boardId: string }) {
     const queryClient = useQueryClient();
 
     const { data: board, isLoading } = useQuery({
-        queryKey: ["board", boardId],
-        queryFn: async () => {
-            const result = await fetch(`/api/boards/${boardId}`);
-
-            if (!result.ok) throw new Error("Failed to fetch columns");
-
-            return result.json() as Promise<Board>;
-        },
+        queryKey: ['board', boardId],
+        queryFn: () => boardApi.fetchColumns(boardId),
     });
 
     const [items, setItems] = useState<{ [columnId: string]: string[] }>({});
@@ -37,7 +32,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         if (board) {
             setItems(
                 Object.fromEntries(
-                    board.columns.map((column) => [
+                    board.columns.map((column: Column) => [
                         column.id,
                         column.cards.map((card) => card.id),
                     ]),
@@ -47,21 +42,13 @@ export default function BoardClient({ boardId }: { boardId: string }) {
     }, [board]);
 
     const createColumn = useMutation({
-        mutationFn: async () => {
-            const result = await fetch(`/api/boards/${boardId}`, {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({ name: undefined }),
-            });
-
-            if (!result.ok) throw new Error("Failed to create column");
-        },
-        onMutate: async () => {
-            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
-            const previous = queryClient.getQueryData(["board", boardId]);
+        mutationFn: () => boardApi.createColumn(boardId),
+        onMutate: async (boardId) => {
+            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
+            const previous = queryClient.getQueryData(['board', boardId]);
 
             queryClient.setQueryData(
-                ["board", boardId],
+                ['board', boardId],
                 (old: Board | undefined) => {
                     if (!old) return old;
 
@@ -71,7 +58,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                             ...old.columns,
                             {
                                 id: crypto.randomUUID(),
-                                name: "New column",
+                                name: 'New column',
                                 cards: [],
                             },
                         ],
@@ -83,29 +70,23 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
         onError: (error, variables, context) => {
             if (context?.previous) {
-                queryClient.setQueryData(["board", boardId], context.previous);
+                queryClient.setQueryData(['board', boardId], context.previous);
             }
             console.error(error);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
     const deleteColumn = useMutation({
-        mutationFn: async (columnId: string) => {
-            const result = await fetch(`/api/columns/${columnId}`, {
-                method: "DELETE",
-            });
-            if (!result.ok) throw new Error("Failed to delete column");
-            return result.json();
-        },
+        mutationFn: boardApi.deleteColumn,
         onMutate: async (columnId) => {
-            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
-            const previous = queryClient.getQueryData(["board", boardId]);
+            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
+            const previous = queryClient.getQueryData(['board', boardId]);
 
             queryClient.setQueryData(
-                ["board", boardId],
+                ['board', boardId],
                 (old: Board | undefined) => {
                     if (!old) return old;
 
@@ -122,38 +103,23 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
         onError: (error, variables, context) => {
             if (context?.previous) {
-                queryClient.setQueryData(["board", boardId], context.previous);
+                queryClient.setQueryData(['board', boardId], context.previous);
             }
             console.error(error);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
     const renameColumn = useMutation({
-        mutationFn: async ({
-            columnId,
-            name,
-        }: {
-            columnId: string;
-            name: string;
-        }) => {
-            const result = await fetch(`/api/columns/${columnId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: name }),
-            });
-
-            if (!result.ok) throw new Error("Failed to rename column");
-            return result.json();
-        },
+        mutationFn: boardApi.renameColumn,
         onMutate: async ({ columnId, name }) => {
-            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
-            const previous = queryClient.getQueryData(["board", boardId]);
+            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
+            const previous = queryClient.getQueryData(['board', boardId]);
 
             queryClient.setQueryData(
-                ["board", boardId],
+                ['board', boardId],
                 (old: Board | undefined) => {
                     if (!old) return old;
 
@@ -172,32 +138,23 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
         onError: (error, variables, context) => {
             if (context?.previous) {
-                queryClient.setQueryData(["board", boardId], context.previous);
+                queryClient.setQueryData(['board', boardId], context.previous);
             }
             console.error(error);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
     const createCard = useMutation({
-        mutationFn: async (columnId: string) => {
-            const result = await fetch(`/api/columns/${columnId}`, {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({ name: undefined }),
-            });
-
-            if (!result.ok) throw new Error("Failed to create card");
-            return result.json();
-        },
+        mutationFn: boardApi.createCard,
         onMutate: async (columnId) => {
-            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
-            const previous = queryClient.getQueryData(["board", boardId]);
+            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
+            const previous = queryClient.getQueryData(['board', boardId]);
 
             queryClient.setQueryData(
-                ["board", boardId],
+                ['board', boardId],
                 (old: Board | undefined) => {
                     if (!old) return old;
 
@@ -211,7 +168,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                                           ...column.cards,
                                           {
                                               id: crypto.randomUUID(),
-                                              name: "New item",
+                                              name: 'New item',
                                               description: null,
                                               position: 0,
                                               columnId: columnId,
@@ -228,64 +185,34 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
         onError: (error, variables, context) => {
             if (context?.previous) {
-                queryClient.setQueryData(["board", boardId], context.previous);
+                queryClient.setQueryData(['board', boardId], context.previous);
             }
             console.error(error);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
     const moveCard = useMutation({
-        mutationFn: async ({
-            cardId,
-            columnId,
-            positionAbove,
-            positionBelow,
-        }: {
-            cardId: string;
-            columnId: string;
-            positionAbove: number | null;
-            positionBelow: number | null;
-        }) => {
-            const result = await fetch(`/api/cards/${cardId}`, {
-                method: "PATCH",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({
-                    columnId,
-                    positionAbove,
-                    positionBelow,
-                }),
-            });
-
-            if (!result.ok) throw new Error("Failed to move card");
-            return result.json();
-        },
+        mutationFn: boardApi.moveCard,
         onError: () => {
             setItems(previousItems.current);
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
     const deleteCard = useMutation({
-        mutationFn: async (cardId: string) => {
-            const result = await fetch(`/api/cards/${cardId}`, {
-                method: "DELETE",
-            });
-
-            if (!result.ok) throw new Error("Failed to delete card");
-            return result.json();
-        },
+        mutationFn: boardApi.deleteCard,
         onMutate: async (cardId) => {
-            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
-            const previous = queryClient.getQueryData(["board", boardId]);
+            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
+            const previous = queryClient.getQueryData(['board', boardId]);
 
             queryClient.setQueryData(
-                ["board", boardId],
+                ['board', boardId],
                 (old: Board | undefined) => {
                     if (!old) return old;
 
@@ -305,38 +232,23 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
         onError: (error, variables, context) => {
             if (context?.previous) {
-                queryClient.setQueryData(["board", boardId], context.previous);
+                queryClient.setQueryData(['board', boardId], context.previous);
             }
             console.error(error);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
     const renameCard = useMutation({
-        mutationFn: async ({
-            cardId,
-            name,
-        }: {
-            cardId: string;
-            name: string;
-        }) => {
-            const result = await fetch(`/api/cards/${cardId}`, {
-                method: "PATCH",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({ name: name }),
-            });
-
-            if (!result.ok) throw new Error("Failed to rename card");
-            return result.json();
-        },
+        mutationFn: boardApi.renameCard,
         onMutate: async ({ cardId, name }) => {
-            await queryClient.cancelQueries({ queryKey: ["board", boardId] });
-            const previous = queryClient.getQueryData(["board", boardId]);
+            await queryClient.cancelQueries({ queryKey: ['board', boardId] });
+            const previous = queryClient.getQueryData(['board', boardId]);
 
             queryClient.setQueryData(
-                ["board", boardId],
+                ['board', boardId],
                 (old: Board | undefined) => {
                     if (!old) return old;
 
@@ -358,12 +270,12 @@ export default function BoardClient({ boardId }: { boardId: string }) {
         },
         onError: (error, variables, context) => {
             if (context?.previous) {
-                queryClient.setQueryData(["board", boardId], context.previous);
+                queryClient.setQueryData(['board', boardId], context.previous);
             }
             console.error(error);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ queryKey: ['board'] });
         },
     });
 
@@ -373,7 +285,7 @@ export default function BoardClient({ boardId }: { boardId: string }) {
             <main className={styles.main}>
                 <aside className={styles.aside}>
                     <h1 className={styles.projectName}>
-                        projects / {board ? board.name : "My board"}
+                        projects / {board ? board.name : 'My board'}
                     </h1>
                     <Link href="/dashboard">
                         <p>
@@ -418,10 +330,12 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                         const aboveId = cardsInNewColumn[newIndex - 1];
                         const belowId = cardsInNewColumn[newIndex + 1];
 
-                        const allCards = board?.columns.flatMap((c) => c.cards);
+                        const allCards = board?.columns.flatMap(
+                            (column: Column) => column.cards,
+                        );
                         const posAt = (id?: string) =>
-                            allCards?.find((c) => c.id === id)?.position ??
-                            null;
+                            allCards?.find((column: Column) => column.id === id)
+                                ?.position ?? null;
 
                         moveCard.mutate({
                             cardId,
@@ -435,11 +349,13 @@ export default function BoardClient({ boardId }: { boardId: string }) {
                         {board?.columns?.map((column: Column) => {
                             const cardIds = items[column.id] || [];
                             const allCards = board.columns.flatMap(
-                                (column) => column.cards,
+                                (column: Column) => column.cards,
                             );
                             const cardsForColumn = cardIds
                                 .map((id) =>
-                                    allCards.find((card) => card.id === id),
+                                    allCards.find(
+                                        (card: Card) => card.id === id,
+                                    ),
                                 )
                                 .filter(
                                     (card): card is Card => card !== undefined,
